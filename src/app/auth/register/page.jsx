@@ -15,6 +15,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import toast from "react-hot-toast";
+import { clientPost } from "@/utils/clientApi";
 
 const CustomDatePicker = ({ selectedDate, onDateChange }) => {
   // Get the current date
@@ -271,9 +273,87 @@ const CustomDatePicker = ({ selectedDate, onDateChange }) => {
   );
 };
 
-// Rest of the DatePickerDemo component remains unchanged
-const DatePickerDemo = () => {
-  const [dob, setDob] = useState(null);
+const RegistrationForm = () => {
+  const [formData, setFormData] = useState({
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+    role: "patient",
+    dob: null
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Validate phone number (10 digits)
+    if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
+    }
+    
+    // Validate password (minimum 8 characters)
+    if (!formData.password || formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+    }
+    
+    // Validate password match
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    
+    // Validate DOB (must be 18+)
+    if (!formData.dob) {
+      newErrors.dob = "Please select your date of birth";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const formatDateForApi = (date) => {
+    if (!date) return null;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setSubmitting(true);
+    try {
+      // Format the date in YYYY-MM-DD format for API
+      const apiData = {
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+        role: formData.role,
+        dob: formatDateForApi(formData.dob)
+      };
+      
+      const res = await clientPost("/users/register", apiData);
+      toast.success("Registration successful!");
+      // You can add navigation to login page here if needed
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Registration failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -294,30 +374,41 @@ const DatePickerDemo = () => {
           Patient Registration
         </Button>
 
-        <div className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Phone Number Field */}
           <div className="space-y-2">
             <label className="text-sm text-gray-600 block">Phone Number</label>
             <Input
               type="tel"
+              name="phoneNumber"
               className="w-full"
               placeholder="Enter 10-digit phone number"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
             />
+            {errors.phoneNumber && (
+              <p className="text-xs text-red-500">{errors.phoneNumber}</p>
+            )}
           </div>
 
           {/* Date of Birth Field */}
           <div className="space-y-2">
             <label className="text-sm text-gray-600 block">Date of Birth</label>
             <CustomDatePicker
-              selectedDate={dob}
+              selectedDate={formData.dob}
               onDateChange={(date) => {
-                setDob(date);
-                console.log("Selected Date:", date);
+                setFormData(prev => ({
+                  ...prev,
+                  dob: date
+                }));
               }}
             />
             <p className="text-xs text-gray-500">
               You must be at least 18 years old
             </p>
+            {errors.dob && (
+              <p className="text-xs text-red-500">{errors.dob}</p>
+            )}
           </div>
 
           {/* Password Field */}
@@ -325,9 +416,15 @@ const DatePickerDemo = () => {
             <label className="text-sm text-gray-600 block">Password</label>
             <Input
               type="password"
+              name="password"
               className="w-full"
               placeholder="Enter password (min 8 characters)"
+              value={formData.password}
+              onChange={handleInputChange}
             />
+            {errors.password && (
+              <p className="text-xs text-red-500">{errors.password}</p>
+            )}
           </div>
 
           {/* Confirm Password Field */}
@@ -337,14 +434,24 @@ const DatePickerDemo = () => {
             </label>
             <Input
               type="password"
+              name="confirmPassword"
               className="w-full"
               placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
             />
+            {errors.confirmPassword && (
+              <p className="text-xs text-red-500">{errors.confirmPassword}</p>
+            )}
           </div>
 
           {/* Register Button */}
-          <Button className="w-full bg-blue-500 hover:bg-blue-600">
-            Register
+          <Button 
+            type="submit" 
+            className="w-full bg-blue-500 hover:bg-blue-600"
+            disabled={submitting}
+          >
+            {submitting ? "Registering..." : "Register"}
           </Button>
 
           {/* Login Link */}
@@ -352,10 +459,10 @@ const DatePickerDemo = () => {
             Already have an account?{" "}
             <span className="text-blue-500 cursor-pointer">Login</span>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default DatePickerDemo;
+export default RegistrationForm;
