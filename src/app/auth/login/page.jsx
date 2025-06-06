@@ -18,6 +18,7 @@ import { clientPost } from "@/utils/clientApi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { withAuth } from "@/components/withAuth";
+import Cookies from "js-cookie";
 
 // Define Zod schema for form validation
 const loginSchema = z.object({
@@ -55,6 +56,7 @@ const LoginForm = () => {
       console.log("Login response:", res);
       toast.success("Login successful");
       // Handle successful login
+      Cookies.set("is_login", 1);
       Router.push("/profile");
     } catch (e) {
       console.log("Error:", e);
