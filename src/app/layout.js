@@ -1,5 +1,6 @@
 import "./globals.css";
 import BottomNavigation from "@/components/BottomNavigation";
+import TopNavigation from "@/components/TopNavigation";
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
@@ -13,9 +14,9 @@ export default function RootLayout({ children }) {
       <body className={""}>
         <div className="max-w-md mx-auto h-screen">
           <Toaster />
+          <TopNavigation />
           {children}
           <BottomNavigation />
-         
         </div>
       </body>
     </html>

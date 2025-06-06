@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import toast from "react-hot-toast";
 import { clientPost } from "@/utils/clientApi";
+import { withAuth } from "@/components/withAuth";
 
 const CustomDatePicker = ({ selectedDate, onDateChange }) => {
   // Get the current date
@@ -465,4 +466,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default withAuth(RegistrationForm);

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { number, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
 import { Shield } from "lucide-react";
 import { clientPost } from "@/utils/clientApi";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { withAuth } from "@/components/withAuth";
 
 // Define Zod schema for form validation
 const loginSchema = z.object({
@@ -32,6 +34,8 @@ const loginSchema = z.object({
 
 const LoginForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const Router = useRouter();
 
   // Initialize form with Zod resolver
   const form = useForm({
@@ -51,6 +55,7 @@ const LoginForm = () => {
       console.log("Login response:", res);
       toast.success("Login successful");
       // Handle successful login
+      Router.push("/profile");
     } catch (e) {
       console.log("Error:", e);
       toast.error("Login failed");
@@ -164,4 +169,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default withAuth(LoginForm);

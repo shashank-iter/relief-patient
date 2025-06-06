@@ -1,10 +1,15 @@
 "use client";
-import BottomNavigation from "@/components/BottomNavigation";
-export default function Home() {
+import { useEffect } from "react";
+import { withAuth } from "@/components/withAuth";
+ function Home() {
+  useEffect(() => {
+    
+  }, [])
   return (
     <>
       Page File
-      {/* <BottomNavigation /> */}
     </>
   );
 }
+
+export default withAuth(Home);

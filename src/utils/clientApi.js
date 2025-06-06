@@ -13,7 +13,7 @@ const handleResponseError = async (error) => {
     //   await logout();
       console.warn("Authentication failed or token expired");
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
     }
 
@@ -55,7 +55,7 @@ export const clientGet = async (url, config = {}) => {
 export const clientPost = async (url, data = {}, config = {}) => {
   try {
     const headers = {
-      ...config.headers,
+      // ...config.headers,
       "Content-Type": "application/json",
     };
 
