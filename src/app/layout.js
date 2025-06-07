@@ -1,7 +1,8 @@
 import "./globals.css";
 import BottomNavigation from "@/components/BottomNavigation";
 import TopNavigation from "@/components/TopNavigation";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Relief Patient",
@@ -11,9 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <SpeedInsights />
       <body className={""}>
         <div className="max-w-md mx-auto h-screen">
-          <Toaster />
+          <Toaster position="top-center" />
           <TopNavigation />
           {children}
           <BottomNavigation />
