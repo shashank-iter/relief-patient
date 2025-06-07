@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Plus, Trash2, Save, ArrowLeft } from "lucide-react"
 import { toast } from "sonner"
+import { clientPut, clientPost } from "@/utils/clientApi"
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 const relationships = ["Father", "Mother", "Spouse", "Sibling", "Child", "Friend", "Other"]
@@ -137,8 +138,8 @@ export default function ProfileEditForm({ initialData }) {
 
     try {
       // Here you would typically send the data to your API
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
-
+    //   await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
+console.log(formData)
       toast({
         title: "Profile Updated",
         description: "Patient profile has been successfully updated.",
