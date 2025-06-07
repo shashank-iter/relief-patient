@@ -180,7 +180,7 @@ export default function MedicalHistoryForm({
   };
 
   const addDisease = async () => {
-    // if (!newItems.disease.name || !newItems.disease.status) {
+    // if (!newItems?.disease?.name || !newItems?.disease?.status) {
     //   toast({
     //     title: "Error",
     //     description: "Please fill in all required fields.",
@@ -193,7 +193,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     diseases: [...prev.medicalHistory.diseases, newItems.disease],
+    //     diseases: [...prev.medicalHistory?.diseases, newItems?.disease],
     //   },
     // }));
 
@@ -206,11 +206,11 @@ export default function MedicalHistoryForm({
       const response = await clientPost(
         "/users/patient/medical-history/disease",
         {
-          name: newItems.disease.name,
-          status: newItems.disease.status,
-          from: newItems.disease.from,
-          to: newItems.disease.to,
-          medication: newItems.disease.medication,
+          name: newItems?.disease?.name,
+          status: newItems?.disease?.status,
+          from: newItems?.disease?.from,
+          to: newItems?.disease?.to,
+          medication: newItems?.disease?.medication,
         }
       );
 
@@ -227,7 +227,7 @@ export default function MedicalHistoryForm({
   };
 
   const updateDisease = async () => {
-    // if (!editItems.disease.name || !editItems.disease.status) {
+    // if (!editItems?.disease?.name || !editItems?.disease?.status) {
     //   toast({
     //     title: "Error",
     //     description: "Please fill in all required fields.",
@@ -238,13 +238,13 @@ export default function MedicalHistoryForm({
 
     // console.log(
     //   "Updated Disease Data:",
-    //   editItems.disease,
+    //   editItems?.disease,
     //   "at index:",
     //   editingIndex
     // );
 
-    // const newDiseases = [...formData.medicalHistory.diseases];
-    // newDiseases[editingIndex] = editItems.disease;
+    // const newDiseases = [...formData.medicalHistory?.diseases];
+    // newDiseases[editingIndex] = editItems?.disease;
 
     // setFormData((prev) => ({
     //   ...prev,
@@ -263,7 +263,7 @@ export default function MedicalHistoryForm({
       const response = await clientPost(
         "/users/patient/medical-history/disease",
         {
-          ...editItems.disease,
+          ...editItems?.disease,
           itemId: editItems?.disease?._id,
         }
       );
@@ -284,7 +284,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     diseases: prev.medicalHistory.diseases.filter((_, i) => i !== index),
+    //     diseases: prev.medicalHistory?.diseases?.filter((_, i) => i !== index),
     //   },
     // }));
     // toast({
@@ -310,7 +310,7 @@ export default function MedicalHistoryForm({
   };
 
   const addAllergy = async () => {
-    // if (!newItems.allergy.reason || !newItems.allergy.symptoms) {
+    // if (!newItems?.allergy?.reason || !newItems?.allergy?.symptoms) {
     //   toast({
     //     title: "Error",
     //     description: "Please fill in all required fields.",
@@ -323,7 +323,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     allergies: [...prev.medicalHistory.allergies, newItems.allergy],
+    //     allergies: [...prev.medicalHistory?.allergies, newItems?.allergy],
     //   },
     // }));
 
@@ -336,9 +336,9 @@ export default function MedicalHistoryForm({
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
         {
-          reason: newItems?.allergy.reason,
+          reason: newItems?.allergy?.reason,
           symptoms: newItems?.allergy?.symptoms,
-          medication: newItems?.allergy.medication,
+          medication: newItems?.allergy?.medication,
         }
       );
 
@@ -355,7 +355,7 @@ export default function MedicalHistoryForm({
   };
 
   const updateAllergy = async () => {
-    // if (!editItems.allergy.reason || !editItems.allergy.symptoms) {
+    // if (!editItems?.allergy?.reason || !editItems?.allergy?.symptoms) {
     //   toast({
     //     title: "Error",
     //     description: "Please fill in all required fields.",
@@ -366,13 +366,13 @@ export default function MedicalHistoryForm({
 
     // console.log(
     //   "Updated Allergy Data:",
-    //   editItems.allergy,
+    //   editItems?.allergy,
     //   "at index:",
     //   editingIndex
     // );
 
-    // const newAllergies = [...formData.medicalHistory.allergies];
-    // newAllergies[editingIndex] = editItems.allergy;
+    // const newAllergies = [...formData.medicalHistory?.allergies];
+    // newAllergies[editingIndex] = editItems?.allergy;
 
     // setFormData((prev) => ({
     //   ...prev,
@@ -391,7 +391,7 @@ export default function MedicalHistoryForm({
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
         {
-          ...editItems.allergy,
+          ...editItems?.allergy,
           itemId: editItems?.allergy?._id,
         }
       );
@@ -412,7 +412,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     allergies: prev.medicalHistory.allergies.filter((_, i) => i !== index),
+    //     allergies: prev.medicalHistory?.allergies.filter((_, i) => i !== index),
     //   },
     // }));
     // toast({
@@ -438,7 +438,7 @@ export default function MedicalHistoryForm({
   };
 
   const addInjury = async () => {
-    // if (!newItems.injury.body_part || !newItems.injury.injury_year) {
+    // if (!newItems?.injury?.body_part || !newItems?.injury?.injury_year) {
     //   toast({
     //     title: "Error",
     //     description: "Please fill in all required fields.",
@@ -451,7 +451,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     injuries: [...prev.medicalHistory.injuries, newItems.injury],
+    //     injuries: [...prev.medicalHistory?.injuries, newItems?.injury],
     //   },
     // }));
 
@@ -467,10 +467,10 @@ export default function MedicalHistoryForm({
         {
           body_part: newItems?.injury?.body_part,
           injury_year: newItems?.injury?.injury_year,
-          surgery_year: newItems?.injury.surgery_year,
-          surgery: newItems?.injury.surgery,
-          stitches: newItems?.injury.stitches,
-          recovered: newItems?.injury.recovered,
+          surgery_year: newItems?.injury?.surgery_year,
+          surgery: newItems?.injury?.surgery,
+          stitches: newItems?.injury?.stitches,
+          recovered: newItems?.injury?.recovered,
         }
       );
 
@@ -489,13 +489,13 @@ export default function MedicalHistoryForm({
   const updateInjury = async () => {
     // console.log(
     //   "Updated Injury Data:",
-    //   editItems.injury,
+    //   editItems?.injury,
     //   "at index:",
     //   editingIndex
     // );
 
-    // const newInjuries = [...formData.medicalHistory.injuries];
-    // newInjuries[editingIndex] = editItems.injury;
+    // const newInjuries = [...formData.medicalHistory?.injuries];
+    // newInjuries[editingIndex] = editItems?.injury;
 
     // setFormData((prev) => ({
     //   ...prev,
@@ -515,7 +515,7 @@ export default function MedicalHistoryForm({
       const response = await clientPost(
         "/users/patient/medical-history/injury",
         {
-          ...editItems.injury,
+          ...editItems?.injury,
           itemId: editItems?.injury?._id,
         }
       );
@@ -536,7 +536,7 @@ export default function MedicalHistoryForm({
     //   ...prev,
     //   medicalHistory: {
     //     ...prev.medicalHistory,
-    //     injuries: prev.medicalHistory.injuries.filter((_, i) => i !== index),
+    //     injuries: prev.medicalHistory?.injuries.filter((_, i) => i !== index),
     //   },
     // }))
     // toast({
@@ -643,7 +643,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Disease Name *</Label>
                           <Input
-                            value={newItems.disease.name}
+                            value={newItems?.disease?.name}
                             onChange={(e) =>
                               handleNewItemChange(
                                 "disease",
@@ -657,7 +657,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Status *</Label>
                           <Select
-                            value={newItems.disease.status}
+                            value={newItems?.disease?.status}
                             onValueChange={(value) =>
                               handleNewItemChange("disease", "status", value)
                             }
@@ -679,7 +679,7 @@ export default function MedicalHistoryForm({
                           <Label>From Date</Label>
                           <Input
                             type="date"
-                            value={newItems.disease.from}
+                            value={newItems?.disease?.from}
                             onChange={(e) =>
                               handleNewItemChange(
                                 "disease",
@@ -693,7 +693,7 @@ export default function MedicalHistoryForm({
                           <Label>To Date</Label>
                           <Input
                             type="date"
-                            value={newItems.disease.to}
+                            value={newItems?.disease?.to}
                             onChange={(e) =>
                               handleNewItemChange(
                                 "disease",
@@ -707,7 +707,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Current Medication</Label>
                         <Textarea
-                          value={newItems.disease.medication}
+                          value={newItems?.disease?.medication}
                           onChange={(e) =>
                             handleNewItemChange(
                               "disease",
@@ -755,7 +755,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Disease Name *</Label>
                           <Input
-                            value={editItems.disease.name}
+                            value={editItems?.disease?.name}
                             onChange={(e) =>
                               handleEditItemChange(
                                 "disease",
@@ -769,7 +769,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Status *</Label>
                           <Select
-                            value={editItems.disease.status}
+                            value={editItems?.disease?.status}
                             onValueChange={(value) =>
                               handleEditItemChange("disease", "status", value)
                             }
@@ -792,7 +792,7 @@ export default function MedicalHistoryForm({
                           <Input
                             type="date"
                             value={convertToDatePickerFormat(
-                              editItems.disease.from
+                              editItems?.disease?.from
                             )}
                             onChange={(e) =>
                               handleEditItemChange(
@@ -808,7 +808,7 @@ export default function MedicalHistoryForm({
                           <Input
                             type="date"
                             value={convertToDatePickerFormat(
-                              editItems.disease.to
+                              editItems?.disease?.to
                             )}
                             onChange={(e) =>
                               handleEditItemChange(
@@ -823,7 +823,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Current Medication</Label>
                         <Textarea
-                          value={editItems.disease.medication}
+                          value={editItems?.disease?.medication}
                           onChange={(e) =>
                             handleEditItemChange(
                               "disease",
@@ -851,7 +851,7 @@ export default function MedicalHistoryForm({
                 </Dialog>
               </div>
 
-              {formData?.medicalHistory.diseases.map((disease, index) => (
+              {formData?.medicalHistory?.diseases?.map((disease, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-medium">Disease {index + 1}</h4>
@@ -870,7 +870,7 @@ export default function MedicalHistoryForm({
                         variant="outline"
                         className={"hover:bg-red-300"}
                         size="sm"
-                        onClick={() => removeDisease(disease._id)}
+                        onClick={() => removeDisease(disease?._id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -880,10 +880,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2">
                       <Label>Disease Name *</Label>
                       <Input
-                        value={disease.name}
+                        value={disease?.name}
                         onChange={(e) => {
                           const newDiseases = [
-                            ...formData?.medicalHistory.diseases,
+                            ...formData?.medicalHistory?.diseases,
                           ];
                           newDiseases[index] = {
                             ...newDiseases[index],
@@ -904,10 +904,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2">
                       <Label>Status *</Label>
                       <Select
-                        value={disease.status}
+                        value={disease?.status}
                         onValueChange={(value) => {
                           const newDiseases = [
-                            ...formData?.medicalHistory.diseases,
+                            ...formData?.medicalHistory?.diseases,
                           ];
                           newDiseases[index] = {
                             ...newDiseases[index],
@@ -940,10 +940,10 @@ export default function MedicalHistoryForm({
                         <Label>From Date</Label>
                         <Input
                           type="date"
-                          value={convertToDatePickerFormat(disease.from)}
+                          value={convertToDatePickerFormat(disease?.from)}
                           onChange={(e) => {
                             const newDiseases = [
-                              ...formData?.medicalHistory.diseases,
+                              ...formData?.medicalHistory?.diseases,
                             ];
                             newDiseases[index] = {
                               ...newDiseases[index],
@@ -966,10 +966,10 @@ export default function MedicalHistoryForm({
                         <Label>To Date</Label>
                         <Input
                           type="date"
-                          value={convertToDatePickerFormat(disease.to)}
+                          value={convertToDatePickerFormat(disease?.to)}
                           onChange={(e) => {
                             const newDiseases = [
-                              ...formData?.medicalHistory.diseases,
+                              ...formData?.medicalHistory?.diseases,
                             ];
                             newDiseases[index] = {
                               ...newDiseases[index],
@@ -990,10 +990,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2 md:col-span-2">
                       <Label>Current Medication</Label>
                       <Textarea
-                        value={disease.medication}
+                        value={disease?.medication}
                         onChange={(e) => {
                           const newDiseases = [
-                            ...formData?.medicalHistory.diseases,
+                            ...formData?.medicalHistory?.diseases,
                           ];
                           newDiseases[index] = {
                             ...newDiseases[index],
@@ -1046,7 +1046,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Allergy Cause *</Label>
                         <Input
-                          value={newItems.allergy.reason}
+                          value={newItems?.allergy?.reason}
                           onChange={(e) =>
                             handleNewItemChange(
                               "allergy",
@@ -1060,7 +1060,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Symptoms *</Label>
                         <Textarea
-                          value={newItems.allergy.symptoms}
+                          value={newItems?.allergy?.symptoms}
                           onChange={(e) =>
                             handleNewItemChange(
                               "allergy",
@@ -1074,7 +1074,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Treatment/Medication</Label>
                         <Input
-                          value={newItems.allergy.medication}
+                          value={newItems?.allergy?.medication}
                           onChange={(e) =>
                             handleNewItemChange(
                               "allergy",
@@ -1121,7 +1121,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Allergy Cause *</Label>
                         <Input
-                          value={editItems.allergy.reason}
+                          value={editItems?.allergy?.reason}
                           onChange={(e) =>
                             handleEditItemChange(
                               "allergy",
@@ -1135,7 +1135,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Symptoms *</Label>
                         <Textarea
-                          value={editItems.allergy.symptoms}
+                          value={editItems?.allergy?.symptoms}
                           onChange={(e) =>
                             handleEditItemChange(
                               "allergy",
@@ -1149,7 +1149,7 @@ export default function MedicalHistoryForm({
                       <div className="space-y-2">
                         <Label>Treatment/Medication</Label>
                         <Input
-                          value={editItems.allergy.medication}
+                          value={editItems?.allergy?.medication}
                           onChange={(e) =>
                             handleEditItemChange(
                               "allergy",
@@ -1177,7 +1177,7 @@ export default function MedicalHistoryForm({
                 </Dialog>
               </div>
 
-              {formData?.medicalHistory.allergies.map((allergy, index) => (
+              {formData?.medicalHistory?.allergies.map((allergy, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-medium">Allergy {index + 1}</h4>
@@ -1196,7 +1196,7 @@ export default function MedicalHistoryForm({
                         variant="outline"
                         size="sm"
                         className={"hover:bg-red-300"}
-                        onClick={() => removeAllergy(allergy._id)}
+                        onClick={() => removeAllergy(allergy?._id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -1206,10 +1206,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2">
                       <Label>Allergy Cause *</Label>
                       <Input
-                        value={allergy.reason}
+                        value={allergy?.reason}
                         onChange={(e) => {
                           const newAllergies = [
-                            ...formData?.medicalHistory.allergies,
+                            ...formData?.medicalHistory?.allergies,
                           ];
                           newAllergies[index] = {
                             ...newAllergies[index],
@@ -1231,10 +1231,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2">
                       <Label>Treatment/Medication</Label>
                       <Input
-                        value={allergy.medication}
+                        value={allergy?.medication}
                         onChange={(e) => {
                           const newAllergies = [
-                            ...formData?.medicalHistory.allergies,
+                            ...formData?.medicalHistory?.allergies,
                           ];
                           newAllergies[index] = {
                             ...newAllergies[index],
@@ -1255,10 +1255,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2 md:col-span-2">
                       <Label>Symptoms *</Label>
                       <Textarea
-                        value={allergy.symptoms}
+                        value={allergy?.symptoms}
                         onChange={(e) => {
                           const newAllergies = [
-                            ...formData?.medicalHistory.allergies,
+                            ...formData?.medicalHistory?.allergies,
                           ];
                           newAllergies[index] = {
                             ...newAllergies[index],
@@ -1313,7 +1313,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Body Part *</Label>
                           <Input
-                            value={newItems.injury.body_part}
+                            value={newItems?.injury?.body_part}
                             onChange={(e) =>
                               handleNewItemChange(
                                 "injury",
@@ -1330,7 +1330,7 @@ export default function MedicalHistoryForm({
                             type="number"
                             min="1900"
                             max={new Date().getFullYear()}
-                            value={newItems.injury.injury_year}
+                            value={newItems?.injury?.injury_year}
                             onChange={(e) =>
                               handleNewItemChange(
                                 "injury",
@@ -1345,7 +1345,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="surgery"
-                            checked={newItems.injury.surgery}
+                            checked={newItems?.injury?.surgery}
                             onCheckedChange={(checked) =>
                               handleNewItemChange("injury", "surgery", checked)
                             }
@@ -1353,14 +1353,14 @@ export default function MedicalHistoryForm({
                           <Label htmlFor="surgery">Required Surgery</Label>
                         </div>
 
-                        {newItems.injury.surgery && (
+                        {newItems?.injury?.surgery && (
                           <div className="space-y-2">
                             <Label>Surgery Year</Label>
                             <Input
                               type="number"
                               min="1900"
                               max={new Date().getFullYear()}
-                              value={newItems.injury.surgery_year}
+                              value={newItems?.injury?.surgery_year}
                               onChange={(e) =>
                                 handleNewItemChange(
                                   "injury",
@@ -1375,7 +1375,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="stitches"
-                            checked={newItems.injury.stitches}
+                            checked={newItems?.injury?.stitches}
                             onCheckedChange={(checked) =>
                               handleNewItemChange("injury", "stitches", checked)
                             }
@@ -1386,7 +1386,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="recovered"
-                            checked={newItems.injury.recovered}
+                            checked={newItems?.injury?.recovered}
                             onCheckedChange={(checked) =>
                               handleNewItemChange(
                                 "injury",
@@ -1435,7 +1435,7 @@ export default function MedicalHistoryForm({
                         <div className="space-y-2">
                           <Label>Body Part *</Label>
                           <Input
-                            value={editItems.injury.body_part}
+                            value={editItems?.injury?.body_part}
                             onChange={(e) =>
                               handleEditItemChange(
                                 "injury",
@@ -1452,7 +1452,7 @@ export default function MedicalHistoryForm({
                             type="number"
                             min="1900"
                             max={new Date().getFullYear()}
-                            value={editItems.injury.injury_year}
+                            value={editItems?.injury?.injury_year}
                             onChange={(e) =>
                               handleEditItemChange(
                                 "injury",
@@ -1467,7 +1467,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="edit-surgery"
-                            checked={editItems.injury.surgery}
+                            checked={editItems?.injury?.surgery}
                             onCheckedChange={(checked) =>
                               handleEditItemChange("injury", "surgery", checked)
                             }
@@ -1475,14 +1475,14 @@ export default function MedicalHistoryForm({
                           <Label htmlFor="edit-surgery">Required Surgery</Label>
                         </div>
 
-                        {editItems.injury.surgery && (
+                        {editItems?.injury?.surgery && (
                           <div className="space-y-2">
                             <Label>Surgery Year</Label>
                             <Input
                               type="number"
                               min="1900"
                               max={new Date().getFullYear()}
-                              value={editItems.injury.surgery_year}
+                              value={editItems?.injury?.surgery_year}
                               onChange={(e) =>
                                 handleEditItemChange(
                                   "injury",
@@ -1497,7 +1497,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="edit-stitches"
-                            checked={editItems.injury.stitches}
+                            checked={editItems?.injury?.stitches}
                             onCheckedChange={(checked) =>
                               handleEditItemChange(
                                 "injury",
@@ -1514,7 +1514,7 @@ export default function MedicalHistoryForm({
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id="edit-recovered"
-                            checked={editItems.injury.recovered}
+                            checked={editItems?.injury?.recovered}
                             onCheckedChange={(checked) =>
                               handleEditItemChange(
                                 "injury",
@@ -1545,7 +1545,7 @@ export default function MedicalHistoryForm({
                 </Dialog>
               </div>
 
-              {formData?.medicalHistory.injuries.map((injury, index) => (
+              {formData?.medicalHistory?.injuries.map((injury, index) => (
                 <div key={index} className="border rounded-lg p-4 space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-medium">Injury {index + 1}</h4>
@@ -1564,7 +1564,7 @@ export default function MedicalHistoryForm({
                         variant="outline"
                         size="sm"
                         className={"hover:bg-red-300"}
-                        onClick={() => removeInjury(injury._id)}
+                        onClick={() => removeInjury(injury?._id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -1574,10 +1574,10 @@ export default function MedicalHistoryForm({
                     <div className="space-y-2">
                       <Label>Body Part *</Label>
                       <Input
-                        value={injury.body_part}
+                        value={injury?.body_part}
                         onChange={(e) => {
                           const newInjuries = [
-                            ...formData?.medicalHistory.injuries,
+                            ...formData?.medicalHistory?.injuries,
                           ];
                           newInjuries[index] = {
                             ...newInjuries[index],
@@ -1602,10 +1602,10 @@ export default function MedicalHistoryForm({
                         type="number"
                         min="1900"
                         max={new Date().getFullYear()}
-                        value={injury.injury_year}
+                        value={injury?.injury_year}
                         onChange={(e) => {
                           const newInjuries = [
-                            ...formData?.medicalHistory.injuries,
+                            ...formData?.medicalHistory?.injuries,
                           ];
                           newInjuries[index] = {
                             ...newInjuries[index],
@@ -1627,10 +1627,10 @@ export default function MedicalHistoryForm({
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id={`surgery-${index}`}
-                          checked={injury.surgery}
+                          checked={injury?.surgery}
                           onCheckedChange={(checked) => {
                             const newInjuries = [
-                              ...formData?.medicalHistory.injuries,
+                              ...formData?.medicalHistory?.injuries,
                             ];
                             newInjuries[index] = {
                               ...newInjuries[index],
@@ -1651,17 +1651,17 @@ export default function MedicalHistoryForm({
                         </Label>
                       </div>
 
-                      {injury.surgery && (
+                      {injury?.surgery && (
                         <div className="space-y-2">
                           <Label>Surgery Year</Label>
                           <Input
                             type="number"
                             min="1900"
                             max={new Date().getFullYear()}
-                            value={injury.surgery_year}
+                            value={injury?.surgery_year}
                             onChange={(e) => {
                               const newInjuries = [
-                                ...formData?.medicalHistory.injuries,
+                                ...formData?.medicalHistory?.injuries,
                               ];
                               newInjuries[index] = {
                                 ...newInjuries[index],
@@ -1683,10 +1683,10 @@ export default function MedicalHistoryForm({
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id={`stitches-${index}`}
-                          checked={injury.stitches}
+                          checked={injury?.stitches}
                           onCheckedChange={(checked) => {
                             const newInjuries = [
-                              ...formData?.medicalHistory.injuries,
+                              ...formData?.medicalHistory?.injuries,
                             ];
                             newInjuries[index] = {
                               ...newInjuries[index],
@@ -1710,10 +1710,10 @@ export default function MedicalHistoryForm({
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id={`recovered-${index}`}
-                          checked={injury.recovered}
+                          checked={injury?.recovered}
                           onCheckedChange={(checked) => {
                             const newInjuries = [
-                              ...formData?.medicalHistory.injuries,
+                              ...formData?.medicalHistory?.injuries,
                             ];
                             newInjuries[index] = {
                               ...newInjuries[index],

@@ -220,7 +220,7 @@ export default function PersonalInformationForm({
               <Label htmlFor="locality">Locality/Area *</Label>
               <Input
                 id="locality"
-                value={formData?.address.locality}
+                value={formData?.address?.locality}
                 onChange={(e) =>
                   handleInputChange("locality", e.target.value, "address")
                 }
@@ -231,7 +231,7 @@ export default function PersonalInformationForm({
               <Label htmlFor="city">City *</Label>
               <Input
                 id="city"
-                value={formData?.address.city}
+                value={formData?.address?.city}
                 onChange={(e) =>
                   handleInputChange("city", e.target.value, "address")
                 }
@@ -242,7 +242,7 @@ export default function PersonalInformationForm({
               <Label htmlFor="state">State *</Label>
               <Input
                 id="state"
-                value={formData?.address.state}
+                value={formData?.address?.state}
                 onChange={(e) =>
                   handleInputChange("state", e.target.value, "address")
                 }
@@ -253,7 +253,7 @@ export default function PersonalInformationForm({
               <Label htmlFor="pincode">Pincode *</Label>
               <Input
                 id="pincode"
-                value={formData?.address.pincode}
+                value={formData?.address?.pincode}
                 onChange={(e) =>
                   handleInputChange("pincode", e.target.value, "address")
                 }

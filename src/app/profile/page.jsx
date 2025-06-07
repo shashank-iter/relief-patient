@@ -26,15 +26,15 @@ import { formatDate } from "@/lib/utils";
 import { clientGet } from "@/utils/clientApi";
 import { Button } from "@/components/ui/button";
 import { withAuth } from "@/components/withAuth";
- function PatientProfile() {
+function PatientProfile() {
   const [profile, setProfile] = useState(null);
   const Router = useRouter();
-  
+
   const fetchUserProfile = async () => {
     try {
       const response = await clientGet("/users/patient/profile");
       console.log(response);
-      setProfile(response.data);
+      setProfile(response?.data);
     } catch (err) {
       console.log("Something went wrong", err);
     }
@@ -45,11 +45,11 @@ import { withAuth } from "@/components/withAuth";
   // Remove duplicate entries by using a Set with stringified objects
   const uniqueAllergies = Array.from(
     new Set(
-      profile?.medicalHistory.allergies.map((allergy) =>
+      profile?.medicalHistory?.allergies.map((allergy) =>
         JSON.stringify({
-          reason: allergy.reason,
-          symptoms: allergy.symptoms,
-          medication: allergy.medication,
+          reason: allergy?.reason,
+          symptoms: allergy?.symptoms,
+          medication: allergy?.medication,
         })
       )
     )
@@ -57,20 +57,18 @@ import { withAuth } from "@/components/withAuth";
 
   const uniqueInjuries = Array.from(
     new Set(
-      profile?.medicalHistory.injuries.map((injury) =>
+      profile?.medicalHistory?.injuries.map((injury) =>
         JSON.stringify({
-          body_part: injury.body_part,
-          surgery: injury.surgery,
-          stitches: injury.stitches,
-          recovered: injury.recovered,
-          injury_year: injury.injury_year,
-          surgery_year: injury.surgery_year,
+          body_part: injury?.body_part,
+          surgery: injury?.surgery,
+          stitches: injury?.stitches,
+          recovered: injury?.recovered,
+          injury_year: injury?.injury_year,
+          surgery_year: injury?.surgery_year,
         })
       )
     )
   ).map((str) => JSON.parse(str));
-
-
 
   return (
     profile && (
@@ -94,7 +92,7 @@ import { withAuth } from "@/components/withAuth";
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle className="text-2xl font-bold">
-                  {profile?.name}
+                  {profile?.name || "Relief User"}
                 </CardTitle>
                 {/* <CardDescription className="flex items-center mt-1">
                   <User className="h-4 w-4 mr-1" />
@@ -102,7 +100,7 @@ import { withAuth } from "@/components/withAuth";
                 </CardDescription> */}
               </div>
               <Badge className="bg-red-500 hover:bg-red-600">
-                {profile?.bloodGroup}
+                {profile?.bloodGroup || "N/A"}
               </Badge>
             </div>
           </CardHeader>
@@ -124,7 +122,7 @@ import { withAuth } from "@/components/withAuth";
                 <div className="flex items-center text-sm">
                   <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
                   <span className="text-gray-700 font-medium">Aadhar:</span>
-                  <span className="ml-2">{profile?.aadharNumber}</span>
+                  <span className="ml-2">{profile?.aadharNumber || "N/A"}</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -133,9 +131,9 @@ import { withAuth } from "@/components/withAuth";
                   <div>
                     <span className="text-gray-700 font-medium">Address:</span>
                     <address className="ml-2 not-italic">
-                      {profile?.address.locality}, {profile?.address.city}
+                      {profile?.address?.locality}, {profile?.address?.city}
                       <br />
-                      {profile?.address.state} - {profile?.address.pincode}
+                      {profile?.address?.state} - {profile?.address?.pincode}
                     </address>
                   </div>
                 </div>
@@ -159,27 +157,27 @@ import { withAuth } from "@/components/withAuth";
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {profile?.emergencyContacts.map((contact, index) => (
+            {profile?.emergencyContacts?.map((contact, index) => (
               <div
                 key={index}
                 className="flex flex-col md:flex-row md:items-center justify-between mb-5"
               >
                 <div>
                   <p className="font-medium">
-                    {contact.name}{" "}
+                    {contact?.name}{" "}
                     <span className="text-gray-500">
-                      ({contact.relationship})
+                      ({contact?.relationship})
                     </span>
                   </p>
-                  <p className="text-sm text-gray-600">{contact.email}</p>
+                  <p className="text-sm text-gray-600">{contact?.email}</p>
                 </div>
                 <div className="mt-2 md:mt-0">
                   <a
-                    href={`tel:${contact.phoneNumber}`}
+                    href={`tel:${contact?.phoneNumber}`}
                     className="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors"
                   >
                     <Phone className="h-4 w-4 mr-2" />
-                    {contact.phoneNumber}
+                    {contact?.phoneNumber}
                   </a>
                 </div>
               </div>
@@ -215,34 +213,34 @@ import { withAuth } from "@/components/withAuth";
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {profile?.medicalHistory.diseases.length > 0 ? (
+                {profile?.medicalHistory?.diseases.length > 0 ? (
                   <div className="space-y-4">
-                    {profile?.medicalHistory.diseases.map((disease, index) => (
+                    {profile?.medicalHistory?.diseases.map((disease, index) => (
                       <div
                         key={index}
                         className="border-l-4 border-amber-400 pl-4 py-2"
                       >
                         <div className="flex justify-between items-start">
                           <h3 className="font-medium text-lg">
-                            {disease.name}
+                            {disease?.name}
                           </h3>
                           <Badge
                             variant={
-                              disease.status === "current"
+                              disease?.status === "current"
                                 ? "destructive"
                                 : "outline"
                             }
                           >
-                            {disease.status}
+                            {disease?.status}
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600 mt-1">
                           <span className="font-medium">Since:</span>{" "}
-                          {formatDate(disease.from)}
+                          {formatDate(disease?.from)}
                         </p>
                         <p className="text-sm text-gray-600">
                           <span className="font-medium">Medication:</span>{" "}
-                          {disease.medication}
+                          {disease?.medication}
                         </p>
                       </div>
                     ))}
@@ -271,15 +269,15 @@ import { withAuth } from "@/components/withAuth";
                         className="border-l-4 border-red-400 pl-4 py-2"
                       >
                         <h3 className="font-medium text-lg">
-                          {allergy.reason}
+                          {allergy?.reason}
                         </h3>
                         <p className="text-sm text-gray-600 mt-1">
                           <span className="font-medium">Symptoms:</span>{" "}
-                          {allergy.symptoms}
+                          {allergy?.symptoms}
                         </p>
                         <p className="text-sm text-gray-600">
                           <span className="font-medium">Treatment:</span>{" "}
-                          {allergy.medication}
+                          {allergy?.medication}
                         </p>
                       </div>
                     ))}
@@ -308,33 +306,33 @@ import { withAuth } from "@/components/withAuth";
                         className="border-l-4 border-blue-400 pl-4 py-2"
                       >
                         <h3 className="font-medium text-lg">
-                          {injury.body_part} Injury ({injury.injury_year})
+                          {injury?.body_part} Injury ({injury?.injury_year})
                         </h3>
                         <div className="grid grid-cols-2 gap-2 mt-2">
                           <div className="flex items-center">
                             <Badge
-                              variant={injury.surgery ? "default" : "outline"}
+                              variant={injury?.surgery ? "default" : "outline"}
                               className="mr-2"
                             >
-                              {injury.surgery ? "Surgery" : "No Surgery"}
+                              {injury?.surgery ? "Surgery" : "No Surgery"}
                             </Badge>
-                            {injury.surgery && (
+                            {injury?.surgery && (
                               <span className="text-xs text-gray-500">
-                                ({injury.surgery_year})
+                                ({injury?.surgery_year})
                               </span>
                             )}
                           </div>
                           <Badge
-                            variant={injury.stitches ? "default" : "outline"}
+                            variant={injury?.stitches ? "default" : "outline"}
                           >
-                            {injury.stitches
+                            {injury?.stitches
                               ? "Required Stitches"
                               : "No Stitches"}
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600 mt-2">
                           <span className="font-medium">Status:</span>{" "}
-                          {injury.recovered
+                          {injury?.recovered
                             ? "Fully Recovered"
                             : "Not Fully Recovered"}
                         </p>

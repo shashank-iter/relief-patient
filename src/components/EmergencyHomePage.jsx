@@ -22,6 +22,7 @@ import {
   Ambulance,
   User,
   CogIcon,
+  InfoIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -197,17 +198,17 @@ export default function EmergencyHomePage() {
         {/* Emergency Report Button */}
         <Button
           onClick={handleEmergencyReport}
-          className="w-full h-20 text-xl font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
+          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />
-          REPORT EMERGENCY
+          REPORT EMERGENCY FOR SELF
         </Button>
         <Button
           onClick={handleEmergencyReport}
-          className="w-full h-20 text-xl font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
+          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />
-          REPORT EMERGENCY
+          REPORT EMERGENCY FOR OTHER
         </Button>
 
         {/* Find Hospitals Drawer */}
@@ -343,7 +344,7 @@ export default function EmergencyHomePage() {
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                ℹ
+                <InfoIcon className="w-6 h-6 text-amber-600" />
               </div>
               <div>
                 <h3 className="font-medium text-amber-800">Emergency Tips</h3>
