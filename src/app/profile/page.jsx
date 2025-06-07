@@ -25,7 +25,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/lib/utils";
 import { clientGet } from "@/utils/clientApi";
 import { Button } from "@/components/ui/button";
-export default function PatientProfile() {
+import { withAuth } from "@/components/withAuth";
+ function PatientProfile() {
   const [profile, setProfile] = useState(null);
   const Router = useRouter();
   
@@ -351,3 +352,5 @@ export default function PatientProfile() {
     )
   );
 }
+
+export default withAuth(PatientProfile);

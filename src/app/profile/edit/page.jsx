@@ -3,6 +3,7 @@ import React from "react";
 import { clientGet } from "@/utils/clientApi";
 import { useState, useEffect } from "react";
 import ProfileEditForm from "@/components/ProfileEditForm";
+import { withAuth } from "@/components/withAuth";
 function ProfileEdit() {
   const [profile, setProfile] = useState(null);
   const fetchUserProfile = async () => {
@@ -20,4 +21,4 @@ function ProfileEdit() {
   return profile && <ProfileEditForm initialData={profile} />;
 }
 
-export default ProfileEdit;
+export default withAuth(ProfileEdit);
