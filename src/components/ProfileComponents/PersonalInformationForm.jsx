@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,10 +26,19 @@ import { convertToDatePickerFormat } from "@/lib/utils";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-export default function PersonalInformationForm({ initialData, onRefresh }) {
+export default function PersonalInformationForm({
+  initialData,
+  onRefresh,
+  reloadProfile,
+  setReloadProfile,
+}) {
   const [formData, setFormData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
 
   const handleInputChange = (field, value, section) => {
     setFormData((prev) => {
@@ -57,7 +66,7 @@ export default function PersonalInformationForm({ initialData, onRefresh }) {
     try {
       // Here you would typically send the data to your API
       console.log(formData);
-      const response = clientPut("/users/patient/update-profile/", {
+      const response = await clientPut("/users/patient/update-profile/", {
         name: formData?.name || "",
         phoneNumber: formData?.phoneNumber || "",
         dob: formData?.dob || "",
@@ -70,7 +79,7 @@ export default function PersonalInformationForm({ initialData, onRefresh }) {
       console.log(response);
 
       // update profile data
-      onRefresh();
+      setReloadProfile(!reloadProfile);
 
       toast.success("Personal Information Updated", {
         description: "Personal information has been successfully updated.",
