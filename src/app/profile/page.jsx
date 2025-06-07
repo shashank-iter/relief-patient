@@ -76,7 +76,7 @@ import { withAuth } from "@/components/withAuth";
     profile && (
       <div className="container mx-auto py-6 px-4 max-w-5xl mb-16">
         {/* Emergency Alert Banner */}
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md flex items-center">
+        {/* <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md flex items-center">
           <AlertCircle className="h-6 w-6 text-red-500 mr-3" />
           <div>
             <h2 className="text-lg font-semibold text-red-800">
@@ -86,28 +86,28 @@ import { withAuth } from "@/components/withAuth";
               Critical medical information for emergency response
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* Patient Identity Card */}
         <Card className="mb-6 border-l-4 border-l-emerald-500 shadow-md">
           <CardHeader className="pb-2">
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-center">
               <div>
                 <CardTitle className="text-2xl font-bold">
                   {profile?.name}
                 </CardTitle>
-                <CardDescription className="flex items-center mt-1">
+                {/* <CardDescription className="flex items-center mt-1">
                   <User className="h-4 w-4 mr-1" />
                   ID: {profile?._id.substring(0, 8)}...
-                </CardDescription>
+                </CardDescription> */}
               </div>
-              <Badge className="bg-emerald-500 hover:bg-emerald-600">
+              <Badge className="bg-red-500 hover:bg-red-600">
                 {profile?.bloodGroup}
               </Badge>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center text-sm">
                   <Calendar className="h-4 w-4 mr-2 text-gray-500" />
@@ -141,7 +141,7 @@ import { withAuth } from "@/components/withAuth";
                 </div>
               </div>
               <div
-                className="flex justify-end items-center"
+                className="flex justify-end items-center w-full"
                 onClick={() => Router.push("/profile/edit")}
               >
                 <Button className="mt-4">Edit Profile</Button>
@@ -162,7 +162,7 @@ import { withAuth } from "@/components/withAuth";
             {profile?.emergencyContacts.map((contact, index) => (
               <div
                 key={index}
-                className="flex flex-col md:flex-row md:items-center justify-between"
+                className="flex flex-col md:flex-row md:items-center justify-between mb-5"
               >
                 <div>
                   <p className="font-medium">

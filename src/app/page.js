@@ -1,14 +1,13 @@
 "use client";
 import { useEffect } from "react";
 import { withAuth } from "@/components/withAuth";
- function Home() {
-  useEffect(() => {
-    
-  }, [])
+import EmergencyHomePage from "@/components/EmergencyHomePage";
+function Home() {
+  useEffect(() => {}, []);
   return (
-    <>
-      Page File
-    </>
+    <div className="pb-16">
+      <EmergencyHomePage />
+    </div>
   );
 }
 
