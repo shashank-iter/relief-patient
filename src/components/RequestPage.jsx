@@ -30,7 +30,7 @@ const statusLabels = {
   cancelled: "Cancelled",
 };
 
-export default function RequestsPage({ requests }) {
+export default function RequestsPage({ requests, status, setStatus }) {
   const [statusFilter, setStatusFilter] = useState("active");
   const router = useRouter();
 
@@ -57,7 +57,7 @@ export default function RequestsPage({ requests }) {
   const filteredRequests = getFilteredRequests();
 
   const handleRequestClick = (requestId) => {
-    // router.push(/requests/${requestId})
+    router.push(`/requests/${requestId}`);
   };
 
   return (
@@ -87,12 +87,16 @@ export default function RequestsPage({ requests }) {
             <CardTitle className="text-lg">Filter Requests</CardTitle>
             <div className="flex items-center space-x-4 ">
               <span className="text-sm text-gray-600">Status:</span>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select
+                value={status}
+                onValueChange={(e) => {
+                  setStatus(e);
+                }}
+              >
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="active">Active Requests</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="accepted">Accepted</SelectItem>
                   <SelectItem value="finalized">Finalized</SelectItem>
@@ -172,12 +176,19 @@ export default function RequestsPage({ requests }) {
                       </div>
                     </div>
                   </div>
-
-                  <div className="text-right">
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </div>
+                  {request?.status === "pending" && (
+                    <div className="text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          handleCancelRequest(request._id);
+                        }}
+                      >
+                        View Details
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

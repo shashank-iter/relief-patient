@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { clientGet, clientPost } from "@/utils/clientApi";
 
 // Mock hospital data - in a real app, this would come from an API
 const mockHospitals = [
@@ -88,7 +89,7 @@ const mockHospitals = [
 
 export default function EmergencyHomePage() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [userName] = useState("Shashank"); // In a real app, this would come from user context
+  const [userName, setUsername] = useState(""); // In a real app, this would come from user context
   const [userLocation, setUserLocation] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
@@ -102,6 +103,50 @@ export default function EmergencyHomePage() {
 
     return () => clearInterval(timer);
   }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await clientGet("/users/patient/profile");
+      console.log(response);
+      localStorage.setItem("user_id", response?.data?._id);
+      localStorage.setItem("username", response?.data?.name);
+      localStorage.setItem("patientPhoneNumber", response?.data?.phoneNumber);
+      setUsername(response?.data?.name?.split(" ")[0] + "!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    askForLocationAccess();
+  }, []);
+
+  const askForLocationAccess = async () => {
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log("User location:", latitude, longitude);
+            setUserLocation([latitude, longitude]);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+  };
 
   const getGreeting = () => {
     const hour = currentTime.getHours();
@@ -117,6 +162,50 @@ export default function EmergencyHomePage() {
 
     // In a real app, this would trigger emergency protocols
     console.log("Emergency reported at:", new Date().toISOString());
+  };
+
+  const createEmergencyRequestForSelf = async () => {
+    // if userLocation is null, ask for location access
+    if (userLocation === null) {
+      // show a toast with a button to enable location access
+      toast.error(
+        "Please enable location access to create an emergency request",
+        {
+          action: {
+            label: "Enable Location",
+            onClick: () => {
+              askForLocationAccess();
+            },
+          },
+        }
+      );
+      return;
+    }
+    try {
+      const response = await clientPost(
+        "/emergency/patient/create_emergency_request",
+        {
+          forSelf: true,
+          patientName: localStorage.getItem("username"),
+          patientPhoneNumber: localStorage.getItem("patientPhoneNumber"),
+          location: {
+            type: "Point",
+            // coordinates: [userLocation[0], userLocation[1]],
+            coordinates: [19.7942, 76.9749],
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Emergency Request Created", {
+        description: response?.message,
+      });
+      setTimeout(() => {
+        Router.push(`/requests/${response?.data?._id}`);
+      }, 1000);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
   };
 
   const fetchNearbyHospitals = async () => {
@@ -168,7 +257,7 @@ export default function EmergencyHomePage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">
-                  {getGreeting()}, {userName}!
+                  {getGreeting()}, {userName}
                 </h1>
                 <p className="text-blue-100 mt-1">
                   {currentTime.toLocaleDateString("en-US", {
@@ -197,7 +286,7 @@ export default function EmergencyHomePage() {
 
         {/* Emergency Report Button */}
         <Button
-          onClick={handleEmergencyReport}
+          onClick={createEmergencyRequestForSelf}
           className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />

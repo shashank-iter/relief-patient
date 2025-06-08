@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import RequestsPage from "@/components/RequestPage";
+import { toast } from "sonner";
+import { clientPost } from "@/utils/clientApi";
 
 // Mock data for requests list
 const getRequests = () => {
@@ -58,15 +60,27 @@ const getRequests = () => {
 
 export default function Requests() {
   const [requests, setRequests] = useState([]);
+  const [status, setStatus] = useState("pending");
+
+  const fetchRequestsByStatus = async (status) => {
+    try {
+      const response = await clientPost(
+        `/emergency/patient/get_emergency_requests_by_status`,
+        {
+          status: status,
+        }
+      );
+      console.log(response);
+      setRequests(response.data);
+    } catch (e) {
+      console.log(e);
+      toast.error("Something went wrong");
+    }
+  };
 
   useEffect(() => {
-    const fetchRequests = () => {
-      const data = getRequests();
-      setRequests(data);
-    };
+    fetchRequestsByStatus(status);
+  }, [status]);
 
-    fetchRequests();
-  }, []);
-
-  return <RequestsPage requests={requests} />;
+  return <RequestsPage requests={requests} status={status} setStatus={setStatus} />;
 }
