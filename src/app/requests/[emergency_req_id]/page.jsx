@@ -4,8 +4,9 @@ import { clientGet, clientPost } from "@/utils/clientApi";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
+import { withAuth } from "@/components/withAuth";
 
-export default function RequestDetails() {
+function RequestDetails() {
   const [requestData, setRequestData] = useState(null);
   const intervalRef = useRef(null);
   const pathname = usePathname();
@@ -13,8 +14,10 @@ export default function RequestDetails() {
   const getRequestDetails = async () => {
     try {
       // Extract the ID from the URL pathname
-      const requestId = pathname.split('/').pop();
-      const response = await clientGet(`/emergency/patient/get_hospital_responses/${requestId}/`);
+      const requestId = pathname.split("/").pop();
+      const response = await clientGet(
+        `/emergency/patient/get_hospital_responses/${requestId}/`
+      );
       console.log(response);
       setRequestData(response.data);
     } catch (err) {
@@ -42,7 +45,14 @@ export default function RequestDetails() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {requestData && <RequestDetailsPage requestData={requestData} refreshRequest={getRequestDetails} />}
+      {requestData && (
+        <RequestDetailsPage
+          requestData={requestData}
+          refreshRequest={getRequestDetails}
+        />
+      )}
     </main>
   );
 }
+
+export default withAuth(RequestDetails);

@@ -180,28 +180,7 @@ export default function MedicalHistoryForm({
   };
 
   const addDisease = async () => {
-    // if (!newItems?.disease?.name || !newItems?.disease?.status) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill in all required fields.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     diseases: [...prev.medicalHistory?.diseases, newItems?.disease],
-    //   },
-    // }));
-
-    // handleModalClose("disease");
-    // toast({
-    //   title: "Disease Added",
-    //   description: "Medical condition has been added successfully.",
-    // });
+  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/disease",
@@ -218,6 +197,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       toast.success("Disease Added", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       handleModalClose("disease");
     } catch (e) {
@@ -227,38 +207,7 @@ export default function MedicalHistoryForm({
   };
 
   const updateDisease = async () => {
-    // if (!editItems?.disease?.name || !editItems?.disease?.status) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill in all required fields.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-
-    // console.log(
-    //   "Updated Disease Data:",
-    //   editItems?.disease,
-    //   "at index:",
-    //   editingIndex
-    // );
-
-    // const newDiseases = [...formData.medicalHistory?.diseases];
-    // newDiseases[editingIndex] = editItems?.disease;
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     diseases: newDiseases,
-    //   },
-    // }));
-
-    // handleModalClose("editDisease");
-    // toast({
-    //   title: "Disease Updated",
-    //   description: "Medical condition has been updated successfully.",
-    // });
+  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/disease",
@@ -270,6 +219,7 @@ export default function MedicalHistoryForm({
       console.log(response);
       toast.success("Disease updated", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       setReloadProfile(!reloadProfile);
       handleModalClose("editDisease");
@@ -280,17 +230,7 @@ export default function MedicalHistoryForm({
   };
 
   const removeDisease = async (diseaseId) => {
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     diseases: prev.medicalHistory?.diseases?.filter((_, i) => i !== index),
-    //   },
-    // }));
-    // toast({
-    //   title: "Disease Removed",
-    //   description: "Medical condition has been removed.",
-    // });
+   
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/disease/${diseaseId}`
@@ -298,6 +238,7 @@ export default function MedicalHistoryForm({
       console.log(response);
       toast.success("Disease Deleted", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       //update profile after deleting allergies.
       setReloadProfile(!reloadProfile);
@@ -310,28 +251,7 @@ export default function MedicalHistoryForm({
   };
 
   const addAllergy = async () => {
-    // if (!newItems?.allergy?.reason || !newItems?.allergy?.symptoms) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill in all required fields.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     allergies: [...prev.medicalHistory?.allergies, newItems?.allergy],
-    //   },
-    // }));
-
-    // handleModalClose("allergy");
-    // toast({
-    //   title: "Allergy Added",
-    //   description: "Allergy has been added successfully.",
-    // });
+  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
@@ -346,6 +266,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       toast.success("Allergy Added", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       handleModalClose("allergy");
     } catch (e) {
@@ -355,38 +276,7 @@ export default function MedicalHistoryForm({
   };
 
   const updateAllergy = async () => {
-    // if (!editItems?.allergy?.reason || !editItems?.allergy?.symptoms) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill in all required fields.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-
-    // console.log(
-    //   "Updated Allergy Data:",
-    //   editItems?.allergy,
-    //   "at index:",
-    //   editingIndex
-    // );
-
-    // const newAllergies = [...formData.medicalHistory?.allergies];
-    // newAllergies[editingIndex] = editItems?.allergy;
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     allergies: newAllergies,
-    //   },
-    // }));
-
-    // handleModalClose("editAllergy");
-    // toast({
-    //   title: "Allergy Updated",
-    //   description: "Allergy has been updated successfully.",
-    // });
+   
     try {
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
@@ -398,6 +288,7 @@ export default function MedicalHistoryForm({
       console.log(response);
       toast.success("Allergy updated", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       setReloadProfile(!reloadProfile);
       handleModalClose("editAllergy");
@@ -408,17 +299,7 @@ export default function MedicalHistoryForm({
   };
 
   const removeAllergy = async (allergyId) => {
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     allergies: prev.medicalHistory?.allergies.filter((_, i) => i !== index),
-    //   },
-    // }));
-    // toast({
-    //   title: "Allergy Removed",
-    //   description: "Allergy has been removed.",
-    // });
+    
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/allergy/${allergyId}`
@@ -426,6 +307,7 @@ export default function MedicalHistoryForm({
       console.log(response);
       toast.success("Allergy Deleted", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       //update profile after deleting allergies.
       setReloadProfile(!reloadProfile);
@@ -438,28 +320,7 @@ export default function MedicalHistoryForm({
   };
 
   const addInjury = async () => {
-    // if (!newItems?.injury?.body_part || !newItems?.injury?.injury_year) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill in all required fields.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     injuries: [...prev.medicalHistory?.injuries, newItems?.injury],
-    //   },
-    // }));
-
-    // handleModalClose("injury");
-    // toast({
-    //   title: "Injury Added",
-    //   description: "Injury has been added successfully.",
-    // });
+   
 
     try {
       const response = await clientPost(
@@ -478,6 +339,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       toast.success("Injury Added", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       handleModalClose("injury");
     } catch (e) {
@@ -487,29 +349,7 @@ export default function MedicalHistoryForm({
   };
 
   const updateInjury = async () => {
-    // console.log(
-    //   "Updated Injury Data:",
-    //   editItems?.injury,
-    //   "at index:",
-    //   editingIndex
-    // );
-
-    // const newInjuries = [...formData.medicalHistory?.injuries];
-    // newInjuries[editingIndex] = editItems?.injury;
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     injuries: newInjuries,
-    //   },
-    // }));
-
-    // handleModalClose("editInjury");
-    // toast({
-    //   title: "Injury Updated",
-    //   description: "Injury has been updated successfully.",
-    // });
+   
 
     try {
       const response = await clientPost(
@@ -522,6 +362,7 @@ export default function MedicalHistoryForm({
       console.log(response);
       toast.success("Injury updated", {
         description: response?.message,
+        className: "bg-green-600 text-white",
       });
       setReloadProfile(!reloadProfile);
       handleModalClose("editInjury");
@@ -532,17 +373,7 @@ export default function MedicalHistoryForm({
   };
 
   const removeInjury = async (injuryId) => {
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   medicalHistory: {
-    //     ...prev.medicalHistory,
-    //     injuries: prev.medicalHistory?.injuries.filter((_, i) => i !== index),
-    //   },
-    // }))
-    // toast({
-    //   title: "Injury Removed",
-    //   description: "Injury has been removed.",
-    // })
+   
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/injury/${injuryId}`
@@ -555,6 +386,7 @@ export default function MedicalHistoryForm({
       console.log(err);
       toast.error("Something went wrong", {
         description: "Please try again later.",
+        className: "bg-green-600 text-white",
       });
     }
   };
@@ -569,6 +401,7 @@ export default function MedicalHistoryForm({
       toast({
         title: "Medical History Updated",
         description: "Medical history has been successfully updated.",
+        className: "bg-green-600 text-white",
       });
 
       router.push("/"); // Redirect to profile view

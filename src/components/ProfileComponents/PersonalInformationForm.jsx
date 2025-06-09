@@ -83,6 +83,7 @@ export default function PersonalInformationForm({
 
       toast.success("Personal Information Updated", {
         description: "Personal information has been successfully updated.",
+        className: "bg-green-600 text-white",
       });
 
       // router.push("/"); // Redirect to profile view

@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import RequestsPage from "@/components/RequestPage";
 import { toast } from "sonner";
 import { clientPost } from "@/utils/clientApi";
+import { withAuth } from "@/components/withAuth";
 
-export default function Requests() {
+function Requests() {
   const [requests, setRequests] = useState([]);
   const [status, setStatus] = useState("pending");
   const [loading, setIsLoading] = useState(false);
@@ -33,6 +34,12 @@ export default function Requests() {
   }, [status]);
 
   return (
-    <RequestsPage requests={requests} status={status} setStatus={setStatus} loading={loading} />
+    <RequestsPage
+      requests={requests}
+      status={status}
+      setStatus={setStatus}
+      loading={loading}
+    />
   );
 }
+export default withAuth(Requests);

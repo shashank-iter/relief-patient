@@ -1,8 +1,10 @@
 "use client";
 
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+import { Toaster } from "sonner";
 
 // Response interceptor function
 const handleResponseError = async (error) => {
@@ -10,10 +12,11 @@ const handleResponseError = async (error) => {
     const { status } = error.response;
 
     if (status === 401) {
-    //   await logout();
+      //   await logout();
       console.warn("Authentication failed or token expired");
+      toast.error("You were logged out, please login again.");
       if (typeof window !== "undefined") {
-        // window.location.href = "/login";
+        window.location.href = "/auth/login";
       }
     }
 
