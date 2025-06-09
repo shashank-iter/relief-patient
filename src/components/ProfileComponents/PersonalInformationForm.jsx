@@ -102,7 +102,7 @@ export default function PersonalInformationForm({
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.back()}
+          onClick={() => router.push("/profile")}
           className="flex items-center"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />

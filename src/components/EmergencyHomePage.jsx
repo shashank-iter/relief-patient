@@ -93,6 +93,7 @@ export default function EmergencyHomePage() {
   const [userLocation, setUserLocation] = useState(null);
   const [hospitals, setHospitals] = useState([]);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
   const Router = useRouter();
 
@@ -106,6 +107,7 @@ export default function EmergencyHomePage() {
 
   const fetchProfile = async () => {
     try {
+      setIsLoading(true);
       const response = await clientGet("/users/patient/profile");
       console.log(response);
       localStorage.setItem("user_id", response?.data?._id);
@@ -115,6 +117,8 @@ export default function EmergencyHomePage() {
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,8 +194,8 @@ export default function EmergencyHomePage() {
           patientPhoneNumber: localStorage.getItem("patientPhoneNumber"),
           location: {
             type: "Point",
-            // coordinates: [userLocation[0], userLocation[1]],
-            coordinates: [19.7942, 76.9749],
+            coordinates: [userLocation[0], userLocation[1]],
+            // coordinates: [19.7942, 76.9749],
           },
         }
       );

@@ -2,15 +2,19 @@
 import RequestDetailsPage from "@/components/RequestDeatilsPage";
 import { clientGet, clientPost } from "@/utils/clientApi";
 import { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 
-export default function RequestDetails({ params }) {
+export default function RequestDetails() {
   const [requestData, setRequestData] = useState(null);
   const intervalRef = useRef(null);
+  const pathname = usePathname();
 
   const getRequestDetails = async () => {
     try {
-      const response = await clientGet("/emergency/patient/get_hospital_responses");
+      // Extract the ID from the URL pathname
+      const requestId = pathname.split('/').pop();
+      const response = await clientGet(`/emergency/patient/get_hospital_responses/${requestId}/`);
       console.log(response);
       setRequestData(response.data);
     } catch (err) {
@@ -23,7 +27,7 @@ export default function RequestDetails({ params }) {
     // Initial fetch
     getRequestDetails();
 
-    // Set up polling every 5 seconds
+    // Set up polling every 15 seconds
     intervalRef.current = setInterval(() => {
       getRequestDetails();
     }, 15000);
@@ -34,7 +38,7 @@ export default function RequestDetails({ params }) {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [pathname]); // Add pathname to dependency array
 
   return (
     <main className="min-h-screen bg-gray-50">

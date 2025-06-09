@@ -4,66 +4,14 @@ import RequestsPage from "@/components/RequestPage";
 import { toast } from "sonner";
 import { clientPost } from "@/utils/clientApi";
 
-// Mock data for requests list
-const getRequests = () => {
-  return [
-    {
-      _id: "6844aea7660042c582c83f04",
-      patientName: "John Doe",
-      status: "accepted",
-      createdAt: "2025-06-07T21:27:03.743Z",
-      forSelf: true,
-      patientPhoneNumber: "+1234567890",
-    },
-    {
-      _id: "6844aea7660042c582c83f05",
-      patientName: "Jane Smith",
-      status: "pending",
-      createdAt: "2025-06-07T20:15:30.123Z",
-      forSelf: false,
-      patientPhoneNumber: "+1234567891",
-    },
-    {
-      _id: "6844aea7660042c582c83f06",
-      patientName: "Mike Johnson",
-      status: "finalized",
-      createdAt: "2025-06-07T19:45:12.456Z",
-      forSelf: true,
-      patientPhoneNumber: "+1234567892",
-    },
-    {
-      _id: "6844aea7660042c582c83f07",
-      patientName: "Sarah Wilson",
-      status: "resolved",
-      createdAt: "2025-06-07T18:30:45.789Z",
-      forSelf: false,
-      patientPhoneNumber: "+1234567893",
-    },
-    {
-      _id: "6844aea7660042c582c83f08",
-      patientName: "David Brown",
-      status: "cancelled",
-      createdAt: "2025-06-07T17:20:15.321Z",
-      forSelf: true,
-      patientPhoneNumber: "+1234567894",
-    },
-    {
-      _id: "6844aea7660042c582c83f09",
-      patientName: "Emily Davis",
-      status: "pending",
-      createdAt: "2025-06-07T16:10:30.654Z",
-      forSelf: false,
-      patientPhoneNumber: "+1234567895",
-    },
-  ];
-};
-
 export default function Requests() {
   const [requests, setRequests] = useState([]);
   const [status, setStatus] = useState("pending");
+  const [loading, setIsLoading] = useState(false);
 
   const fetchRequestsByStatus = async (status) => {
     try {
+      setIsLoading(true);
       const response = await clientPost(
         `/emergency/patient/get_emergency_requests_by_status`,
         {
@@ -75,6 +23,8 @@ export default function Requests() {
     } catch (e) {
       console.log(e);
       toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,5 +32,7 @@ export default function Requests() {
     fetchRequestsByStatus(status);
   }, [status]);
 
-  return <RequestsPage requests={requests} status={status} setStatus={setStatus} />;
+  return (
+    <RequestsPage requests={requests} status={status} setStatus={setStatus} loading={loading} />
+  );
 }

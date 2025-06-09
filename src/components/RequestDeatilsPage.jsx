@@ -20,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { formatDate } from "@/lib/utils";
 import {
@@ -39,9 +40,10 @@ import {
   Image as ImageIcon,
   X,
   Loader2,
+  Navigation,
 } from "lucide-react";
 import { toast } from "sonner";
-import { clientPostFormData } from "@/utils/clientApi";
+import { clientPost, clientPostFormData } from "@/utils/clientApi";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -66,6 +68,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const router = useRouter();
   const { request } = requestData;
@@ -76,6 +79,15 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     const dx = coords1[0] - coords2[0];
     const dy = coords1[1] - coords2[1];
     return Math.sqrt(dx * dx + dy * dy) * 111; // Rough conversion to km
+  };
+
+  const handleNavigateToHospital = (hospital) => {
+    if (hospital?.location?.coordinates?.length > 0) {
+      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${hospital.location.coordinates[0]},${hospital.location.coordinates[1]}&travelmode=driving`;
+      window.open(googleMapsUrl, "_blank");
+    } else {
+      toast.error("Hospital coordinates not available");
+    }
   };
 
   const handleImageUpload = async (event) => {
@@ -122,15 +134,18 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
   const handleFinalizeHospital = async (hospitalId, hospitalName) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      const response = await clientPost(
+        `/emergency/patient/finalize_emergency_request/${request?._id}`,
+        {
+          hospitalId: hospitalId,
+        }
+      );
+      console.log(response);
       toast.success(
         `${hospitalName} has been finalized for this emergency request.`
       );
 
-      // In a real app, you'd update the request status and refresh data
-      router.refresh();
+      refreshRequest();
     } catch (error) {
       toast.error("Failed to finalize hospital. Please try again.");
     } finally {
@@ -138,11 +153,14 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     }
   };
 
-  const handleCancelRequest = async () => {
+  const handleCancelRequest = async (requestId) => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await clientPost(
+        `/emergency/patient/cancel_emergency_request/${requestId}`
+      );
+
+      console.log(response);
 
       toast.success("The emergency request has been cancelled successfully.");
 
@@ -151,6 +169,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
       toast.error("Failed to cancel request. Please try again.");
     } finally {
       setIsLoading(false);
+      setCancelModalOpen(false);
     }
   };
 
@@ -184,14 +203,6 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
                     alt="Emergency scene"
                     className="w-full h-auto max-h-[70vh] object-contain rounded-lg"
                   />
-                  {/* <Button
-                    variant="outline"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={() => setImageModalOpen(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button> */}
                 </div>
               </DialogContent>
             </Dialog>
@@ -243,15 +254,293 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     );
   };
 
+  const renderHospitalCard = (hospital, showFinalizeButton = false) => (
+    <Card
+      key={hospital?._id}
+      className={`border-l-4 ${
+        request?.status === "finalized"
+          ? "border-l-purple-500"
+          : "border-l-blue-500"
+      }`}
+    >
+      <CardContent className="p-6">
+        <div className="flex flex-col gap-y-2 justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-semibold">
+              {hospital?.name}
+              {request?.status === "finalized" && (
+                <Badge className="ml-2 bg-purple-100 text-purple-800 border-purple-200">
+                  Finalized Hospital
+                </Badge>
+              )}
+            </h3>
+            <p className="text-gray-600">{hospital?.type?.replace("_", " ")}</p>
+            <p className="text-sm text-gray-500">
+              License: {hospital?.licenseNumber}
+            </p>
+          </div>
+          {showFinalizeButton && (
+            <Button
+              onClick={() =>
+                handleFinalizeHospital(hospital?._id, hospital?.name)
+              }
+              disabled={isLoading}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Finalize Hospital
+            </Button>
+          )}
+        </div>
+
+        <Tabs defaultValue="info" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="info">Info</TabsTrigger>
+            <TabsTrigger value="beds">Beds</TabsTrigger>
+            <TabsTrigger value="blood">Blood</TabsTrigger>
+            <TabsTrigger value="contact">Contact</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="info" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h4 className="font-medium mb-2 flex items-center">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Address
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {hospital?.address?.locality}, {hospital?.address?.city}
+                  <br />
+                  {hospital?.address?.state} - {hospital?.address?.pincode}
+                </p>
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Services</h4>
+                <div className="space-y-2">
+                  <Badge
+                    variant={
+                      hospital?.is_ambulance_available ? "default" : "secondary"
+                    }
+                    className="mr-2"
+                  >
+                    <Ambulance className="h-3 w-3 mr-1" />
+                    {hospital?.is_ambulance_available
+                      ? "Ambulance Available"
+                      : "No Ambulance"}
+                  </Badge>
+                  <Badge
+                    variant={
+                      hospital?.is_blood_available ? "default" : "secondary"
+                    }
+                  >
+                    <Droplets className="h-3 w-3 mr-1" />
+                    {hospital?.is_blood_available
+                      ? "Blood Bank Available"
+                      : "No Blood Bank"}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="beds">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {hospital?.bedData?.map((bed, index) => (
+                <div key={index} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium flex items-center">
+                      <Bed className="h-4 w-4 mr-2" />
+                      {bed?.type} Beds
+                    </h4>
+                    <Badge
+                      variant={bed?.available > 0 ? "default" : "secondary"}
+                    >
+                      {bed?.available > 0 ? "Available" : "Full"}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Available: {bed?.available} / {bed?.count}
+                  </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{
+                        width: `${(bed?.available / bed?.count) * 100}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="blood">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {hospital?.bloodData &&
+                Object.entries(hospital?.bloodData)?.map(([type, count]) => {
+                  if (
+                    type.startsWith("_") ||
+                    type === "owner" ||
+                    type === "updatedAt" ||
+                    type === "createdAt"
+                  )
+                    return null;
+                  return (
+                    <div
+                      key={type}
+                      className="border rounded-lg p-3 text-center"
+                    >
+                      <div className="flex items-center justify-center mb-2">
+                        <Droplets className="h-4 w-4 mr-1 text-red-500" />
+                        <span className="font-medium">
+                          {bloodGroupLabels[type]}
+                        </span>
+                      </div>
+                      <p className="text-lg font-bold">{count}</p>
+                      <p className="text-xs text-gray-500">units</p>
+                    </div>
+                  );
+                })}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contact">
+            <div className="space-y-4">
+              <h4 className="font-medium">Phone Numbers</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {hospital?.phoneNumbers?.map((phone) => (
+                  <div
+                    key={phone?._id}
+                    className="flex items-center justify-between border rounded-lg p-3"
+                  >
+                    <div className="flex items-center">
+                      <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                      <div>
+                        <p className="font-medium">{phone?.number}</p>
+                        <p className="text-xs text-gray-500 capitalize">
+                          {phone?.label}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        (window.location.href = `tel:${phone?.number}`)
+                      }
+                    >
+                      Call
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* Navigate to Hospital Button */}
+        {(request?.status === "finalized" ||
+          request?.status === "accepted") && (
+          <div className="mt-4 pt-4 border-t">
+            <Button
+              onClick={() => handleNavigateToHospital(hospital)}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              size="lg"
+            >
+              <Navigation className="h-5 w-5 mr-2" />
+              Navigate to Hospital
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  // Get hospitals to display based on status
+  const getHospitalsToDisplay = () => {
+    if (request?.status === "finalized" && request?.finalizedHospital) {
+      // Show only the finalized hospital
+      return [request.finalizedHospital];
+    }
+    // Show all accepted hospitals for other statuses
+    return request?.acceptedBy || [];
+  };
+
+  const hospitalsToDisplay = getHospitalsToDisplay();
+
   return (
     <div className="container mx-auto pt-6 pb-24 px-4 max-w-6xl">
       {/* Header */}
       <div className="flex flex-col items-start justify-between mb-6 space-y-4">
         <div className="flex flex-col items-start space-x-4 space-y-4">
-          <Button variant="outline" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Requests
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={() => router.back()}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Requests
+            </Button>
+            {/* Cancel Request Button in Header */}
+            {request?.status !== "cancelled" &&
+              request?.status !== "resolved" && (
+                <Dialog
+                  open={cancelModalOpen}
+                  onOpenChange={setCancelModalOpen}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="border-red-300 text-red-700 hover:bg-red-50"
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Cancel Request
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center text-red-600">
+                        <AlertCircle className="h-5 w-5 mr-2" />
+                        Cancel Emergency Request
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <p className="text-gray-700 mb-4">
+                        Are you sure you want to cancel this emergency request?
+                      </p>
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p className="text-red-800 font-medium">
+                          ⚠️ Warning: No help will arrive if this request is
+                          cancelled.
+                        </p>
+                        <p className="text-red-700 text-sm mt-1">
+                          This action cannot be undone and all hospitals will be
+                          notified of the cancellation.
+                        </p>
+                      </div>
+                    </div>
+                    <DialogFooter className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => setCancelModalOpen(false)}
+                        disabled={isLoading}
+                      >
+                        No, don't cancel
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => handleCancelRequest(request?._id)}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <XCircle className="h-4 w-4 mr-2" />
+                        )}
+                        Yes, cancel it
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
+          </div>
           <div className="flex flex-col gap-y-2">
             <h1 className="text-3xl font-bold text-gray-900">
               Emergency Request Details
@@ -277,7 +566,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4 mb-6">
             <div className="flex items-center space-x-3">
               <User className="h-5 w-5 text-gray-500" />
               <div>
@@ -329,33 +618,28 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
                   </p>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                onClick={handleCancelRequest}
-                disabled={isLoading}
-                className="border-red-300 text-red-700 hover:bg-red-50"
-              >
-                <XCircle className="h-4 w-4 mr-2" />
-                Cancel Request
-              </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Accepted Hospitals */}
+      {/* Hospital(s) Section */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <Building2 className="h-5 w-5 mr-2" />
-            Accepted Hospitals ({request?.acceptedBy?.length})
+            {request?.status === "finalized"
+              ? `Finalized Hospital`
+              : `Accepted Hospitals (${hospitalsToDisplay.length})`}
           </CardTitle>
           <CardDescription>
-            Hospitals that have accepted this emergency request
+            {request?.status === "finalized"
+              ? "The hospital finalized for this emergency request"
+              : "Hospitals that have accepted this emergency request"}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {request?.acceptedBy?.length === 0 ? (
+          {hospitalsToDisplay.length === 0 ? (
             <div className="text-center py-8">
               <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">
@@ -364,201 +648,12 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
             </div>
           ) : (
             <div className="space-y-6">
-              {request?.acceptedBy?.map((hospital) => (
-                <Card
-                  key={hospital?._id}
-                  className="border-l-4 border-l-blue-500"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex flex-col gap-y-2 justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-semibold">
-                          {hospital?.name}
-                        </h3>
-                        <p className="text-gray-600">
-                          {hospital?.type.replace("_", " ")}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          License: {hospital?.licenseNumber}
-                        </p>
-                      </div>
-                      {request?.status === "accepted" &&
-                        !request?.finalizedHospital && (
-                          <Button
-                            onClick={() =>
-                              handleFinalizeHospital(
-                                hospital?._id,
-                                hospital?.name
-                              )
-                            }
-                            disabled={isLoading}
-                            className="bg-green-600 hover:bg-green-700"
-                          >
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Finalize Hospital
-                          </Button>
-                        )}
-                    </div>
-
-                    <Tabs defaultValue="info" className="w-full">
-                      <TabsList className="grid w-full grid-cols-4">
-                        <TabsTrigger value="info">Info</TabsTrigger>
-                        <TabsTrigger value="beds">Beds</TabsTrigger>
-                        <TabsTrigger value="blood">Blood</TabsTrigger>
-                        <TabsTrigger value="contact">Contact</TabsTrigger>
-                      </TabsList>
-
-                      <TabsContent value="info" className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <h4 className="font-medium mb-2 flex items-center">
-                              <MapPin className="h-4 w-4 mr-2" />
-                              Address
-                            </h4>
-                            <p className="text-sm text-gray-600">
-                              {hospital?.address?.locality},{" "}
-                              {hospital?.address?.city}
-                              <br />
-                              {hospital?.address?.state} -{" "}
-                              {hospital?.address?.pincode}
-                            </p>
-                          </div>
-                          <div>
-                            <h4 className="font-medium mb-2">Services</h4>
-                            <div className="space-y-2">
-                              <Badge
-                                variant={
-                                  hospital?.is_ambulance_available
-                                    ? "default"
-                                    : "secondary"
-                                }
-                                className="mr-2"
-                              >
-                                <Ambulance className="h-3 w-3 mr-1" />
-                                {hospital?.is_ambulance_available
-                                  ? "Ambulance Available"
-                                  : "No Ambulance"}
-                              </Badge>
-                              <Badge
-                                variant={
-                                  hospital?.is_blood_available
-                                    ? "default"
-                                    : "secondary"
-                                }
-                              >
-                                <Droplets className="h-3 w-3 mr-1" />
-                                {hospital?.is_blood_available
-                                  ? "Blood Bank Available"
-                                  : "No Blood Bank"}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="beds">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {hospital?.bedData.map((bed, index) => (
-                            <div key={index} className="border rounded-lg p-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <h4 className="font-medium flex items-center">
-                                  <Bed className="h-4 w-4 mr-2" />
-                                  {bed?.type} Beds
-                                </h4>
-                                <Badge
-                                  variant={
-                                    bed?.available > 0 ? "default" : "secondary"
-                                  }
-                                >
-                                  {bed?.available > 0 ? "Available" : "Full"}
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-gray-600">
-                                Available: {bed?.available} / {bed?.count}
-                              </p>
-                              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                                <div
-                                  className="bg-blue-600 h-2 rounded-full"
-                                  style={{
-                                    width: `${
-                                      (bed?.available / bed?.count) * 100
-                                    }%`,
-                                  }}
-                                ></div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="blood">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {Object.entries(hospital?.bloodData).map(
-                            ([type, count]) => {
-                              if (
-                                type.startsWith("_") ||
-                                type === "owner" ||
-                                type === "updatedAt"
-                              )
-                                return null;
-                              return (
-                                <div
-                                  key={type}
-                                  className="border rounded-lg p-3 text-center"
-                                >
-                                  <div className="flex items-center justify-center mb-2">
-                                    <Droplets className="h-4 w-4 mr-1 text-red-500" />
-                                    <span className="font-medium">
-                                      {bloodGroupLabels[type]}
-                                    </span>
-                                  </div>
-                                  <p className="text-lg font-bold">{count}</p>
-                                  <p className="text-xs text-gray-500">units</p>
-                                </div>
-                              );
-                            }
-                          )}
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="contact">
-                        <div className="space-y-4">
-                          <h4 className="font-medium">Phone Numbers</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {hospital?.phoneNumbers.map((phone) => (
-                              <div
-                                key={phone?._id}
-                                className="flex items-center justify-between border rounded-lg p-3"
-                              >
-                                <div className="flex items-center">
-                                  <Phone className="h-4 w-4 mr-2 text-gray-500" />
-                                  <div>
-                                    <p className="font-medium">
-                                      {phone?.number}
-                                    </p>
-                                    <p className="text-xs text-gray-500 capitalize">
-                                      {phone?.label}
-                                    </p>
-                                  </div>
-                                </div>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() =>
-                                    (window.location.href = `tel:${phone?.number}`)
-                                  }
-                                >
-                                  Call
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </CardContent>
-                </Card>
-              ))}
+              {hospitalsToDisplay?.map((hospital) =>
+                renderHospitalCard(
+                  hospital,
+                  request?.status === "accepted" && !request?.finalizedHospital
+                )
+              )}
             </div>
           )}
         </CardContent>

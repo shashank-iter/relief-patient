@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, User, Phone } from "lucide-react";
+import Loader from "./Loader";
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -30,8 +31,7 @@ const statusLabels = {
   cancelled: "Cancelled",
 };
 
-export default function RequestsPage({ requests, status, setStatus }) {
-  const [statusFilter, setStatusFilter] = useState("active");
+export default function RequestsPage({ requests, status, setStatus, loading }) {
   const router = useRouter();
 
   const formatDate = (dateString) => {
@@ -44,17 +44,6 @@ export default function RequestsPage({ requests, status, setStatus }) {
       minute: "2-digit",
     }).format(date);
   };
-
-  const getFilteredRequests = () => {
-    if (statusFilter === "active") {
-      return requests.filter((req) =>
-        ["pending", "accepted", "finalized"].includes(req.status)
-      );
-    }
-    return requests.filter((req) => req.status === statusFilter);
-  };
-
-  const filteredRequests = getFilteredRequests();
 
   const handleRequestClick = (requestId) => {
     router.push(`/requests/${requestId}`);
@@ -112,89 +101,97 @@ export default function RequestsPage({ requests, status, setStatus }) {
       {/* Results Summary */}
       <div className="mb-4">
         <p className="text-sm text-gray-600">
-          Showing {filteredRequests.length}{" "}
-          {statusFilter === "active" ? "active" : statusFilter} request
-          {filteredRequests.length !== 1 ? "s" : ""}
+          Showing {requests?.length} {status === "pending" ? "pending" : status}{" "}
+          request
+          {requests?.length !== 1 ? "s" : ""}
         </p>
       </div>
 
       {/* Requests List */}
-      <div className="space-y-4">
-        {filteredRequests.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <div className="text-gray-400 mb-4">
-                <Clock className="h-12 w-12 mx-auto" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No requests found
-              </h3>
-              <p className="text-gray-600">
-                No {statusFilter === "active" ? "active" : statusFilter}{" "}
-                requests at the moment.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          filteredRequests.map((request) => (
-            <Card
-              key={request._id}
-              className="cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500"
-              onClick={() => handleRequestClick(request._id)}
-            >
-              <CardContent className="p-6">
-                <div className="flex items-end justify-between">
-                  <div className="flex-1">
-                    <div className="flex flex-col items-start space-x-3 space-y-2 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {request.patientName}
-                      </h3>
-                      <div className="flex items-center gap-x-2">
-                        <Badge className={statusColors[request.status]}>
-                          {statusLabels[request.status]}
-                        </Badge>
-                        {request.forSelf && (
-                          <Badge variant="outline" className="text-xs">
-                            Self
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col items-start space-y-2 space-x-6 text-sm text-gray-600">
-                      {/* <div className="flex items-center">
-                        <User className="h-4 w-4 mr-1" />
-                        <span>ID: {request._id.substring(0, 8)}...</span>
-                      </div> */}
-                      <div className="flex items-center">
-                        <Phone className="h-4 w-4 mr-1" />
-                        <span>{request.patientPhoneNumber}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{formatDate(request.createdAt)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {request?.status === "pending" && (
-                    <div className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          handleCancelRequest(request._id);
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  )}
+      {loading ? (
+        <div className="mx-auto">
+          <Loader />
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {requests?.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <div className="text-gray-400 mb-4">
+                  <Clock className="h-12 w-12 mx-auto" />
                 </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No requests found
+                </h3>
+                <p className="text-gray-600">
+                  No {status === "pending" ? "pending" : status} requests at the
+                  moment.
+                </p>
               </CardContent>
             </Card>
-          ))
-        )}
-      </div>
+          ) : (
+            requests?.map((request) => (
+              <Card
+                key={request?._id}
+                className="cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500"
+                onClick={() => handleRequestClick(request?._id)}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-end justify-between">
+                    <div className="flex-1">
+                      <div className="flex flex-col items-start space-x-3 space-y-2 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {request?.patientName}
+                        </h3>
+                        <div className="flex items-center gap-x-2">
+                          <Badge className={statusColors[request?.status]}>
+                            {statusLabels[request?.status]}
+                          </Badge>
+                          {request?.forSelf && (
+                            <Badge variant="outline" className="text-xs">
+                              Self
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-start space-y-2 space-x-6 text-sm text-gray-600">
+                        {/* <div className="flex items-center">
+                        <User className="h-4 w-4 mr-1" />
+                        <span>ID: {request?._id.substring(0, 8)}...</span>
+                      </div> */}
+                        <div className="flex items-center">
+                          <Phone className="h-4 w-4 mr-1" />
+                          <span>{request?.patientPhoneNumber}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>{formatDate(request?.createdAt)}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {(request?.status === "pending" ||
+                      request?.status === "accepted" ||
+                      request?.status === "finalized") && (
+                      <div className="text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            handleRequestClick(request?._id);
+                          }}
+                        >
+                          View Details
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

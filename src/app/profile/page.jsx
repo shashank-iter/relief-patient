@@ -26,17 +26,22 @@ import { formatDate } from "@/lib/utils";
 import { clientGet } from "@/utils/clientApi";
 import { Button } from "@/components/ui/button";
 import { withAuth } from "@/components/withAuth";
+import Loader from "@/components/Loader";
 function PatientProfile() {
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const Router = useRouter();
 
   const fetchUserProfile = async () => {
+    setLoading(true);
     try {
       const response = await clientGet("/users/patient/profile");
       console.log(response);
       setProfile(response?.data);
     } catch (err) {
       console.log("Something went wrong", err);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -69,6 +74,14 @@ function PatientProfile() {
       )
     )
   ).map((str) => JSON.parse(str));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     profile && (
