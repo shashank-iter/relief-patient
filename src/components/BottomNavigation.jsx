@@ -3,6 +3,7 @@ import { MdHome, MdEmergencyShare, MdDiversity3 } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
 
 const navigation = [
   {
@@ -34,6 +35,8 @@ export default function BottomNavigation() {
     }
     return pathname.includes(href);
   };
+
+  if (!Cookies.get("is_login")) return <></>;
 
   return (
     <div className="fixed bottom-0 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 max-w-md mx-auto">

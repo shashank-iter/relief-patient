@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Shield } from "lucide-react";
 import { clientPost } from "@/utils/clientApi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { withAuth } from "@/components/withAuth";
 import Cookies from "js-cookie";
@@ -59,7 +59,7 @@ const LoginForm = () => {
 
       // set is_login from client side to life of refresh_token as our backend handles access token expiry and refresh automatically, on issue is going to be caused after refresh expries and then user should logout.
       Cookies.set("is_login", 1, { expires: 365 * 24 * 60 * 60 * 1000 });
-      Router.push("/profile");
+      Router.push("/");
     } catch (e) {
       console.log("Error:", e);
       toast.error("Login failed");

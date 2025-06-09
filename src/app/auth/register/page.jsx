@@ -15,9 +15,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { clientPost } from "@/utils/clientApi";
 import { withAuth } from "@/components/withAuth";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const CustomDatePicker = ({ selectedDate, onDateChange }) => {
   // Get the current date
@@ -280,42 +282,43 @@ const RegistrationForm = () => {
     password: "",
     confirmPassword: "",
     role: "patient",
-    dob: null
+    dob: null,
   });
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const Router = useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate phone number (10 digits)
     if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber)) {
       newErrors.phoneNumber = "Please enter a valid 10-digit phone number";
     }
-    
+
     // Validate password (minimum 8 characters)
     if (!formData.password || formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters long";
     }
-    
+
     // Validate password match
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
-    
+
     // Validate DOB (must be 18+)
     if (!formData.dob) {
       newErrors.dob = "Please select your date of birth";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -323,18 +326,18 @@ const RegistrationForm = () => {
   const formatDateForApi = (date) => {
     if (!date) return null;
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setSubmitting(true);
     try {
       // Format the date in YYYY-MM-DD format for API
@@ -342,12 +345,14 @@ const RegistrationForm = () => {
         phoneNumber: formData.phoneNumber,
         password: formData.password,
         role: formData.role,
-        dob: formatDateForApi(formData.dob)
+        dob: formatDateForApi(formData.dob),
       };
-      
+
       const res = await clientPost("/users/register", apiData);
       toast.success("Registration successful!");
       // You can add navigation to login page here if needed
+      Cookies.set("is_login", 1, {expires: 365 * 24 * 60 * 60 * 1000});
+      Router.push("/");
     } catch (err) {
       console.error(err);
       toast.error(err.message || "Registration failed");
@@ -398,18 +403,16 @@ const RegistrationForm = () => {
             <CustomDatePicker
               selectedDate={formData.dob}
               onDateChange={(date) => {
-                setFormData(prev => ({
+                setFormData((prev) => ({
                   ...prev,
-                  dob: date
+                  dob: date,
                 }));
               }}
             />
             <p className="text-xs text-gray-500">
               You must be at least 18 years old
             </p>
-            {errors.dob && (
-              <p className="text-xs text-red-500">{errors.dob}</p>
-            )}
+            {errors.dob && <p className="text-xs text-red-500">{errors.dob}</p>}
           </div>
 
           {/* Password Field */}
@@ -447,8 +450,8 @@ const RegistrationForm = () => {
           </div>
 
           {/* Register Button */}
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600"
             disabled={submitting}
           >
@@ -458,7 +461,9 @@ const RegistrationForm = () => {
           {/* Login Link */}
           <div className="text-center text-sm mt-4">
             Already have an account?{" "}
-            <a href="/auth/login" className="text-blue-500 cursor-pointer">Login</a>
+            <a href="/auth/login" className="text-blue-500 cursor-pointer">
+              Login
+            </a>
           </div>
         </form>
       </div>

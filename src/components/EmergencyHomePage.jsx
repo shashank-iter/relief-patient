@@ -305,7 +305,7 @@ export default function EmergencyHomePage() {
         </Button>
 
         {/* Find Hospitals Drawer */}
-        <Drawer>
+        {/* <Drawer>
           <DrawerTrigger asChild>
             <Button
               onClick={fetchNearbyHospitals}
@@ -405,7 +405,7 @@ export default function EmergencyHomePage() {
               ))}
             </div>
           </DrawerContent>
-        </Drawer>
+        </Drawer> */}
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">

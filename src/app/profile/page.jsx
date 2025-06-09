@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Cookies from "js-cookie";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDate } from "@/lib/utils";
@@ -152,10 +153,27 @@ function PatientProfile() {
                 </div>
               </div>
               <div
-                className="flex justify-end items-center w-full"
-                onClick={() => Router.push("/profile/edit")}
+                className="flex justify-end items-center w-full gap-x-2"
+                // onClick={() => Router.push("/profile/edit")}
               >
-                <Button className="mt-4">Edit Profile</Button>
+                <Button
+                  className="mt-4"
+                  onClick={() => {
+                    Router.push("/profile/edit");
+                  }}
+                >
+                  Edit Profile
+                </Button>
+                <Button
+                  variant="outline"
+                  className="mt-4 "
+                  onClick={() => {
+                    Cookies.remove("is_login");
+                    Router.push("/auth/login");
+                  }}
+                >
+                  Logout
+                </Button>
               </div>
             </div>
           </CardContent>
