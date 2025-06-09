@@ -161,7 +161,7 @@ const LoginForm = () => {
               {/* Register Link */}
               <div className="text-center text-sm mt-4">
                 Don't have an account?{" "}
-                <a href="#" className="text-blue-500">
+                <a href="/auth/register" className="text-blue-500">
                   Register
                 </a>
               </div>

@@ -458,7 +458,7 @@ const RegistrationForm = () => {
           {/* Login Link */}
           <div className="text-center text-sm mt-4">
             Already have an account?{" "}
-            <span className="text-blue-500 cursor-pointer">Login</span>
+            <a href="/auth/login" className="text-blue-500 cursor-pointer">Login</a>
           </div>
         </form>
       </div>
