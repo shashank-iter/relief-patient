@@ -140,8 +140,9 @@ export default function EmergencyContactsForm({
         relationship: "",
       });
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -163,8 +164,9 @@ export default function EmergencyContactsForm({
       setReloadProfile(!reloadProfile);
       closeUpdateModal();
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong");
+   toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -179,8 +181,9 @@ export default function EmergencyContactsForm({
       });
       setReloadProfile(!reloadProfile);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+     toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 

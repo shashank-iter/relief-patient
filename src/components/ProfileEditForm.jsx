@@ -147,11 +147,9 @@ console.log(formData)
 
       router.push("/") // Redirect to profile view
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      })
+      toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       setIsLoading(false)
     }

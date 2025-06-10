@@ -88,9 +88,9 @@ export default function PersonalInformationForm({
 
       // router.push("/"); // Redirect to profile view
     } catch (error) {
-      toast("Something went wrong", {
-        description: "Failed to update personal information. Please try again.",
-      });
+      toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       setIsLoading(false);
     }
