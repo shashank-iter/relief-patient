@@ -147,11 +147,15 @@ export default function EmergencyContactsForm({
 
   const updateEmergencyContact = async () => {
     try {
-      const { _id, ...contactData } = updateContact;
-      const response = await clientPost(
-        `/users/patient/emergency-contacts`,
-        contactData
-      );
+      // const { _id, ...contactData } = updateContact;
+      // console.log(updateContact);
+      const response = await clientPost(`/users/patient/emergency-contacts`, {
+        contactId: updateContact._id,
+        phoneNumber: updateContact.phoneNumber,
+        relationship: updateContact.relationship,
+        email: updateContact.email,
+        name: updateContact.name,
+      });
       console.log(response);
       toast.success("Emergency contact updated", {
         description: response?.message,
