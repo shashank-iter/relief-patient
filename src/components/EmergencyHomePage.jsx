@@ -212,6 +212,49 @@ export default function EmergencyHomePage() {
     }
   };
 
+    const createEmergencyRequestForOther = async () => {
+    // if userLocation is null, ask for location access
+    if (userLocation === null) {
+      // show a toast with a button to enable location access
+      toast.error(
+        "Please enable location access to create an emergency request",
+        {
+          action: {
+            label: "Enable Location",
+            onClick: () => {
+              askForLocationAccess();
+            },
+          },
+        }
+      );
+      return;
+    }
+    try {
+      const response = await clientPost(
+        "/emergency/patient/create_emergency_request",
+        {
+          forSelf: true,
+          patientName: localStorage.getItem("username"),
+          patientPhoneNumber: localStorage.getItem("patientPhoneNumber"),
+          location: {
+            type: "Point",
+            coordinates: [userLocation[0], userLocation[1]],
+            // coordinates: [19.7942, 76.9749],
+          },
+        }
+      );
+      console.log(response);
+      toast.success("Emergency Request Created", {
+        description: response?.message,
+      });
+      setTimeout(() => {
+        Router.push(`/requests/${response?.data?._id}`);
+      }, 1000);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+  };
   const fetchNearbyHospitals = async () => {
     setIsLoadingLocation(true);
 
@@ -297,7 +340,7 @@ export default function EmergencyHomePage() {
           REPORT EMERGENCY FOR SELF
         </Button>
         <Button
-          onClick={handleEmergencyReport}
+          onClick={createEmergencyRequestForOther}
           className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />
