@@ -115,8 +115,9 @@ export default function EmergencyHomePage() {
       localStorage.setItem("patientPhoneNumber", response?.data?.phoneNumber);
       setUsername(response?.data?.name?.split(" ")[0] + "!");
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -147,8 +148,9 @@ export default function EmergencyHomePage() {
         console.error("Geolocation is not supported by this browser.");
       }
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -207,8 +209,9 @@ export default function EmergencyHomePage() {
         Router.push(`/requests/${response?.data?._id}`);
       }, 1000);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+     toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -229,7 +232,7 @@ export default function EmergencyHomePage() {
       });
     } catch (error) {
       toast.error("Location Error", {
-        description: "Unable to get your location. Showing default hospitals.",
+        description: error.message ,
       });
       setHospitals(mockHospitals);
     } finally {

@@ -201,8 +201,9 @@ export default function MedicalHistoryForm({
       });
       handleModalClose("disease");
     } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: e.message,
+      });
     }
   };
 
@@ -224,8 +225,9 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       handleModalClose("editDisease");
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -243,10 +245,9 @@ export default function MedicalHistoryForm({
       //update profile after deleting allergies.
       setReloadProfile(!reloadProfile);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong", {
-        description: "Please try again later.",
-      });
+     toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -270,8 +271,9 @@ export default function MedicalHistoryForm({
       });
       handleModalClose("allergy");
     } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: e.message,
+      });
     }
   };
 
@@ -293,8 +295,9 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       handleModalClose("editAllergy");
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -312,10 +315,9 @@ export default function MedicalHistoryForm({
       //update profile after deleting allergies.
       setReloadProfile(!reloadProfile);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong", {
-        description: "Please try again later.",
-      });
+     toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -343,8 +345,9 @@ export default function MedicalHistoryForm({
       });
       handleModalClose("injury");
     } catch (e) {
-      console.log(e);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: e.message,
+      });
     }
   };
 
@@ -367,8 +370,9 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
       handleModalClose("editInjury");
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -383,11 +387,9 @@ export default function MedicalHistoryForm({
       //update profile after deleting injuries.
       setReloadProfile(!reloadProfile);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong", {
-        description: "Please try again later.",
-        className: "bg-green-600 text-white",
-      });
+    toast.error("Something went wrong", {
+        description: err.message,
+      });
     }
   };
 
@@ -406,11 +408,9 @@ export default function MedicalHistoryForm({
 
       router.push("/"); // Redirect to profile view
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update medical history. Please try again.",
-        variant: "destructive",
-      });
+     toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       // setIsLoading(false);
     }
