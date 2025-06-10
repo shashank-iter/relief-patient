@@ -148,8 +148,8 @@ export default function EmergencyContactsForm({
   const updateEmergencyContact = async () => {
     try {
       const { _id, ...contactData } = updateContact;
-      const response = await clientPut(
-        `/users/patient/emergency-contacts/${_id}`,
+      const response = await clientPost(
+        `/users/patient/emergency-contacts`,
         contactData
       );
       console.log(response);
