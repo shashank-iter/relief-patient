@@ -123,8 +123,9 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
       toast.success("Emergency image uploaded successfully");
       refreshRequest();
     } catch (error) {
-      console.error("Upload error:", error);
-      toast.error("Failed to upload image. Please try again.");
+     toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       setIsUploading(false);
       setSelectedFile(null);
@@ -147,7 +148,9 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
 
       refreshRequest();
     } catch (error) {
-      toast.error("Failed to finalize hospital. Please try again.");
+      toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +169,9 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
 
       router.push("/requests");
     } catch (error) {
-      toast.error("Failed to cancel request. Please try again.");
+      toast.error("Something went wrong", {
+        description: error.message,
+      });
     } finally {
       setIsLoading(false);
       setCancelModalOpen(false);
