@@ -157,6 +157,19 @@ const LoginForm = () => {
               >
                 {isSubmitting ? "Logging in" : "Login"}
               </Button>
+              <Button
+                className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:bg-gray-600"
+                disabled={isSubmitting}
+                onClick={() => {
+                  onSubmit({
+                    phoneNumber: "9999999999",
+                    password: "jaishreeram",
+                    role: "patient",
+                  });
+                }}
+              >
+                {isSubmitting ? "Logging in" : "Dummy Login"}
+              </Button>
 
               {/* Register Link */}
               <div className="text-center text-sm mt-4">

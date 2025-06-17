@@ -180,7 +180,6 @@ export default function MedicalHistoryForm({
   };
 
   const addDisease = async () => {
-  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/disease",
@@ -207,7 +206,6 @@ export default function MedicalHistoryForm({
   };
 
   const updateDisease = async () => {
-  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/disease",
@@ -230,7 +228,6 @@ export default function MedicalHistoryForm({
   };
 
   const removeDisease = async (diseaseId) => {
-   
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/disease/${diseaseId}`
@@ -251,7 +248,6 @@ export default function MedicalHistoryForm({
   };
 
   const addAllergy = async () => {
-  
     try {
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
@@ -276,7 +272,6 @@ export default function MedicalHistoryForm({
   };
 
   const updateAllergy = async () => {
-   
     try {
       const response = await clientPost(
         "/users/patient/medical-history/allergy",
@@ -299,7 +294,6 @@ export default function MedicalHistoryForm({
   };
 
   const removeAllergy = async (allergyId) => {
-    
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/allergy/${allergyId}`
@@ -320,8 +314,6 @@ export default function MedicalHistoryForm({
   };
 
   const addInjury = async () => {
-   
-
     try {
       const response = await clientPost(
         "/users/patient/medical-history/injury",
@@ -349,8 +341,6 @@ export default function MedicalHistoryForm({
   };
 
   const updateInjury = async () => {
-   
-
     try {
       const response = await clientPost(
         "/users/patient/medical-history/injury",
@@ -373,7 +363,6 @@ export default function MedicalHistoryForm({
   };
 
   const removeInjury = async (injuryId) => {
-   
     try {
       const response = await clientDelete(
         `/users/patient/medical-history/injury/${injuryId}`
@@ -522,20 +511,22 @@ export default function MedicalHistoryForm({
                             }
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label>To Date</Label>
-                          <Input
-                            type="date"
-                            value={newItems?.disease?.to}
-                            onChange={(e) =>
-                              handleNewItemChange(
-                                "disease",
-                                "to",
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
+                        {newItems?.disease?.status !== "current" && (
+                          <div className="space-y-2">
+                            <Label>To Date</Label>
+                            <Input
+                              type="date"
+                              value={newItems?.disease?.to}
+                              onChange={(e) =>
+                                handleNewItemChange(
+                                  "disease",
+                                  "to",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <Label>Current Medication</Label>

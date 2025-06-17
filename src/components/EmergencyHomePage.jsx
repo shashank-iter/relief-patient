@@ -111,9 +111,13 @@ export default function EmergencyHomePage() {
       const response = await clientGet("/users/patient/profile");
       console.log(response);
       localStorage.setItem("user_id", response?.data?._id);
-      localStorage.setItem("username", response?.data?.name);
+      localStorage.setItem("username", response?.data?.name || "Relief User");
       localStorage.setItem("patientPhoneNumber", response?.data?.phoneNumber);
-      setUsername(response?.data?.name?.split(" ")[0] + "!");
+      setUsername(
+        localStorage.getItem("username") !== "Relief User"
+          ? localStorage.getItem("username").split(" ")[0]
+          : localStorage.getItem("username")
+      );
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
@@ -212,7 +216,7 @@ export default function EmergencyHomePage() {
     }
   };
 
-    const createEmergencyRequestForOther = async () => {
+  const createEmergencyRequestForOther = async () => {
     // if userLocation is null, ask for location access
     if (userLocation === null) {
       // show a toast with a button to enable location access
