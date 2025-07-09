@@ -58,7 +58,7 @@ const LoginForm = () => {
       // Handle successful login
 
       // set is_login from client side to life of refresh_token as our backend handles access token expiry and refresh automatically, on issue is going to be caused after refresh expries and then user should logout.
-      Cookies.set("is_login", 1, { expires: 365 * 24 * 60 * 60 * 1000 });
+      Cookies.set("is_login", 1, { expires: 365 });
       Router.push("/");
     } catch (e) {
       console.log("Error:", e);

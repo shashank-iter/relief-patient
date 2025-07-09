@@ -351,11 +351,11 @@ const RegistrationForm = () => {
       const res = await clientPost("/users/register", apiData);
       toast.success("Registration successful!");
       // You can add navigation to login page here if needed
-      Cookies.set("is_login", 1, {expires: 365 * 24 * 60 * 60 * 1000});
+      Cookies.set("is_login", 1, {expires: 365});
       Router.push("/");
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Registration failed");
+      toast.error(err?.response?.data?.message || "Registration failed");
     } finally {
       setSubmitting(false);
     }
