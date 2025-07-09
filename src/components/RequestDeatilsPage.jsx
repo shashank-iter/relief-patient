@@ -101,8 +101,8 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     }
 
     // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image size should be less than 2MB");
       return;
     }
 
@@ -123,9 +123,9 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
       toast.success("Emergency image uploaded successfully");
       refreshRequest();
     } catch (error) {
-     toast.error("Something went wrong", {
+      toast.error("Something went wrong", {
         description: error.message,
-      });
+      });
     } finally {
       setIsUploading(false);
       setSelectedFile(null);
@@ -150,7 +150,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     } catch (error) {
       toast.error("Something went wrong", {
         description: error.message,
-      });
+      });
     } finally {
       setIsLoading(false);
     }
@@ -171,10 +171,11 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
     } catch (error) {
       toast.error("Something went wrong", {
         description: error.message,
-      });
+      });
     } finally {
       setIsLoading(false);
       setCancelModalOpen(false);
+      router.push("/");
     }
   };
 
@@ -253,7 +254,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
           </Button>
         </div>
         <p className="text-xs text-gray-500">
-          Maximum file size: 5MB. Supported formats: JPG, PNG, GIF
+          Maximum file size: 2MB. Supported formats: JPG, PNG, GIF
         </p>
       </div>
     );
@@ -481,7 +482,7 @@ export default function RequestDetailsPage({ requestData, refreshRequest }) {
           <div className="flex items-center gap-4">
             <Button variant="outline" onClick={() => router.back()}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Requests
+              Back 
             </Button>
             {/* Cancel Request Button in Header */}
             {request?.status !== "cancelled" &&
