@@ -201,7 +201,7 @@ export default function MedicalHistoryForm({
       handleModalClose("disease");
     } catch (e) {
       toast.error("Something went wrong", {
-        description: e.message,
+        description: e?.response?.data?.message,
       });
     }
   };
@@ -224,7 +224,7 @@ export default function MedicalHistoryForm({
       handleModalClose("editDisease");
     } catch (err) {
       toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
@@ -243,7 +243,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
     } catch (err) {
      toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
@@ -268,7 +268,7 @@ export default function MedicalHistoryForm({
       handleModalClose("allergy");
     } catch (e) {
       toast.error("Something went wrong", {
-        description: e.message,
+        description: e?.response?.data?.message,
       });
     }
   };
@@ -291,7 +291,7 @@ export default function MedicalHistoryForm({
       handleModalClose("editAllergy");
     } catch (err) {
       toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
@@ -310,7 +310,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
     } catch (err) {
      toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
@@ -338,7 +338,7 @@ export default function MedicalHistoryForm({
       handleModalClose("injury");
     } catch (e) {
       toast.error("Something went wrong", {
-        description: e.message,
+        description: e?.response?.data?.message,
       });
     }
   };
@@ -361,7 +361,7 @@ export default function MedicalHistoryForm({
       handleModalClose("editInjury");
     } catch (err) {
       toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
@@ -377,7 +377,7 @@ export default function MedicalHistoryForm({
       setReloadProfile(!reloadProfile);
     } catch (err) {
     toast.error("Something went wrong", {
-        description: err.message,
+        description: err?.response?.data?.message,
       });
     }
   };
