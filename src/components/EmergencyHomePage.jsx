@@ -94,6 +94,7 @@ export default function EmergencyHomePage() {
   const [hospitals, setHospitals] = useState([]);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [loading, setIsLoading] = useState(false);
+  const [createRequestLoading, setCreateRequestLoading] = useState(false);
 
   const Router = useRouter();
 
@@ -120,8 +121,8 @@ export default function EmergencyHomePage() {
       );
     } catch (err) {
       toast.error("Something went wrong", {
-        description: err.message,
-      });
+        description: err?.response?.data?.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -153,8 +154,8 @@ export default function EmergencyHomePage() {
       }
     } catch (err) {
       toast.error("Something went wrong", {
-        description: err.message,
-      });
+        description: err?.response?.data?.message,
+      });
     }
   };
 
@@ -163,15 +164,6 @@ export default function EmergencyHomePage() {
     if (hour < 12) return "Good Morning";
     if (hour < 17) return "Good Afternoon";
     return "Good Evening";
-  };
-
-  const handleEmergencyReport = () => {
-    toast.success("Emergency Alert Sent!", {
-      description: "Your emergency has been reported. Help is on the way.",
-    });
-
-    // In a real app, this would trigger emergency protocols
-    console.log("Emergency reported at:", new Date().toISOString());
   };
 
   const createEmergencyRequestForSelf = async () => {
@@ -191,6 +183,7 @@ export default function EmergencyHomePage() {
       );
       return;
     }
+    setCreateRequestLoading(true);
     try {
       const response = await clientPost(
         "/emergency/patient/create_emergency_request",
@@ -200,8 +193,8 @@ export default function EmergencyHomePage() {
           patientPhoneNumber: localStorage.getItem("patientPhoneNumber"),
           location: {
             type: "Point",
-            coordinates: [userLocation[0], userLocation[1]],
-            // coordinates: [19.7942, 76.9749],
+            // coordinates: [userLocation[0], userLocation[1]],
+            coordinates: [20.3089, 85.8875],
           },
         }
       );
@@ -213,9 +206,10 @@ export default function EmergencyHomePage() {
         Router.push(`/requests/${response?.data?._id}`);
       }, 1000);
     } catch (err) {
-     toast.error("Something went wrong", {
-        description: err.message,
-      });
+      toast.error("Something went wrong", {
+        description: err?.response?.data?.message,
+      });
+      setCreateRequestLoading(false);
     }
   };
 
@@ -236,17 +230,18 @@ export default function EmergencyHomePage() {
       );
       return;
     }
+    setCreateRequestLoading(true);
     try {
       const response = await clientPost(
         "/emergency/patient/create_emergency_request",
         {
-          forSelf: true,
+          forSelf: false,
           patientName: localStorage.getItem("username"),
           patientPhoneNumber: localStorage.getItem("patientPhoneNumber"),
           location: {
             type: "Point",
-            coordinates: [userLocation[0], userLocation[1]],
-            // coordinates: [19.7942, 76.9749],
+            // coordinates: [userLocation[0], userLocation[1]],
+            coordinates: [20.3089, 85.8875],
           },
         }
       );
@@ -258,8 +253,14 @@ export default function EmergencyHomePage() {
         Router.push(`/requests/${response?.data?._id}`);
       }, 1000);
     } catch (err) {
-      console.log(err);
-      toast.error("Something went wrong");
+      toast.error(
+        "Something went wrong",
+
+        {
+          description: err?.response?.data?.message,
+        }
+      );
+      setCreateRequestLoading(false);
     }
   };
   const fetchNearbyHospitals = async () => {
@@ -279,7 +280,7 @@ export default function EmergencyHomePage() {
       });
     } catch (error) {
       toast.error("Location Error", {
-        description: error.message ,
+        description: error.message,
       });
       setHospitals(mockHospitals);
     } finally {
@@ -341,14 +342,16 @@ export default function EmergencyHomePage() {
         {/* Emergency Report Button */}
         <Button
           onClick={createEmergencyRequestForSelf}
-          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
+          disabled={createRequestLoading}
+          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 disabled:bg-gray-600 disabled:cursor-none"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />
           REPORT EMERGENCY FOR SELF
         </Button>
         <Button
+          disabled={createRequestLoading}
           onClick={createEmergencyRequestForOther}
-          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95"
+          className="w-full h-20 text-lg font-bold bg-red-600 hover:bg-red-700 text-white shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 disabled:bg-gray-600 disabled:cursor-none"
         >
           <AlertTriangle className="h-8 w-8 mr-3" />
           REPORT EMERGENCY FOR OTHER
@@ -458,7 +461,7 @@ export default function EmergencyHomePage() {
         </Drawer> */}
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-2 gap-4">
           <Button
             variant="outline"
             className="h-16 flex-col space-y-2 border-green-600 text-green-600 hover:bg-green-50"
@@ -480,7 +483,7 @@ export default function EmergencyHomePage() {
             </div>
             <span className="text-sm font-medium">Edit Profile</span>
           </Button>
-        </div>
+        </div> */}
 
         {/* Emergency Info Card */}
         <Card className="bg-amber-50 border-amber-200">
